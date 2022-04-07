@@ -73,6 +73,9 @@ code {
   --font-color: #333;
   --background-color: #eee;
   --link-color: cornflowerblue;
+  --base-color: white;
+  --inverse-base: black;
+  --highlight-color: rgba(0, 204, 102, 0.5);
 }
 
 /* 2 */
@@ -80,6 +83,8 @@ code {
   --font-color: #eee;
   --background-color: #333;
   --link-color: lightblue;
+  --base-color: black;
+  --inverse-base: white;
 }
 
 body {

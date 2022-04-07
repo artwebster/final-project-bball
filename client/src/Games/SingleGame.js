@@ -1,8 +1,13 @@
 import styled from "styled-components";
 
-const SingleGame = ({gameData}) => {
+const SingleGame = ({ gameData, selectedGame }) => {
+  let focus = gameData.id === selectedGame ? true : false;
+  console.log("focus", focus);
+  console.log("gD", gameData);
+  console.log("sG", selectedGame);
+
   return (
-    <GameDiv>
+    <GameDiv focus={focus}>
       <Teams>
         {gameData.visitor_team.city} VS {gameData.home_team.city}
       </Teams>
@@ -15,20 +20,21 @@ const SingleGame = ({gameData}) => {
 };
 
 const GameDiv = styled.div`
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
+  background: ${({ focus }) => (focus ? `var(--highlight-color)` : "none")};
 `;
 
 const Teams = styled.div`
-    width: 300px;
+  width: 300px;
 `;
 
 const Score = styled.div`
-    width: 100px;
+  width: 100px;
 `;
 
 const Status = styled.div`
-    width: 100px;
+  width: 100px;
 `;
 
 export default SingleGame;

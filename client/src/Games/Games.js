@@ -8,7 +8,8 @@ const Games = () => {
   const [games, setGames] = useState(null);
   const [gameId, setGameId] = useState(null);
 
-  // let today = new Date().toISOString().slice(0, 10)
+  let today = new Date()
+  let todayISO = today.toISOString().slice(0, 10)
   // const today = new Date()
   // console.log("today:", today);
   // const tomorrow = new Date(today);
@@ -19,7 +20,7 @@ const Games = () => {
 
   const handleBallDontLie = () => {
     console.log("function fired!");
-    fetch(`https://www.balldontlie.io/api/v1/games?dates[]=2022-04-06`)
+    fetch(`https://www.balldontlie.io/api/v1/games?dates[]=${todayISO}`)
       .then((res) => res.json())
       .then((data) => setGames(data.data));
   };
@@ -57,7 +58,7 @@ const Games = () => {
                   onClick={() => handleGameClick(game.id)}
                   key={"gc" + game.id}
                 >
-                  <SingleGame gameData={game} key={game.id} />
+                  <SingleGame gameData={game} key={game.id} selectedGame={gameId} />
                 </SingleGameContainer>
                 {gameId === game.id && <GameDetails gameId={gameId} />}
               </>
@@ -79,12 +80,16 @@ const Container = styled.div`
 const GameContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: baseline;
+  justify-content: flex-start;
+  /* border: 2px solid blue; */
 `;
 
 const SingleGameContainer = styled.button`
   background-color: none;
   border: none;
   cursor: pointer;
+  margin: 5px 0;
 `;
 
 const Button = styled.button`
