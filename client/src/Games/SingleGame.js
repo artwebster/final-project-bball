@@ -2,9 +2,6 @@ import styled from "styled-components";
 
 const SingleGame = ({ gameData, selectedGame }) => {
   let focus = gameData.id === selectedGame ? true : false;
-  console.log("focus", focus);
-  console.log("gD", gameData);
-  console.log("sG", selectedGame);
 
   return (
     <GameDiv focus={focus}>

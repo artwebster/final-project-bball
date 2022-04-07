@@ -6,7 +6,6 @@ import GameOdds from "./GameOdds";
 const GameDetails = ({ gameId }) => {
   const [detailsPage, setDetailsPage] = useState(true);
   const [gameDetails, setGameDetails] = useState(null);
-  console.log("game clicked", gameId);
 
     const today = new Date();
     const tomorrow = new Date(today);
