@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Menu = () => {
   return (
     <Wrapper>
-      <SectionLink to={"/games"}>Scores</SectionLink>
+      <SectionLink to={"/games"}>GAMES</SectionLink>
       <SectionLink to={"/news"}>NEWS</SectionLink>
       <SectionLink to={"/standings"}>STANDINGS</SectionLink>
       <SectionLink to={"/schedule"}>SCHEDULE</SectionLink>
