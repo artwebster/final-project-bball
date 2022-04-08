@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FiMenu } from "react-icons/fi";
-import Menu from "../Menu/Menu";
+import Menu from "./Menu/Menu";
 
 const Header = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
@@ -14,7 +14,7 @@ const Header = () => {
       <TopBar>
         <Title to={"/"}>TipOff</Title>
         <MenuButton onClick={() => setToggleMenu(!toggleMenu)}>
-          <FiMenu size={30} />
+          <FiMenu style={{ fontSize: 30, color: "var(--font-color)" }} />
         </MenuButton>
       </TopBar>
       {toggleMenu && <Menu setToggleMenu={setToggleMenu} />}

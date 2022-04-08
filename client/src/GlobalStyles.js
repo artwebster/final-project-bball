@@ -85,6 +85,7 @@ code {
   --link-color: lightblue;
   --base-color: black;
   --inverse-base: white;
+  --highlight-color: rgba(0, 204, 102, 0.5);
 }
 
 body {
@@ -94,6 +95,10 @@ body {
 
 a {
   color: var(--link-color);
+}
+
+p, h1, h2, h3, h4, h5, h6, button {
+  color: var(--font-color)
 }
 
 `;
