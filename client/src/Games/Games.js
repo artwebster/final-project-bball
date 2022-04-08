@@ -92,7 +92,7 @@ const GameContainer = styled.div`
 `;
 
 const SingleGameContainer = styled.button`
-  background-color: none;
+  background-color: var(--base-color);
   border: none;
   cursor: pointer;
 `;
