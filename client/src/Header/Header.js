@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FiMenu } from "react-icons/fi";
 import Menu from "../Menu/Menu";
@@ -7,21 +8,30 @@ const Header = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   return (
+    <>
+    <SpacerDiv />
     <Wrapper>
       <TopBar>
-        <Title>TipOff</Title>
+        <Title to={"/"}>TipOff</Title>
         <MenuButton onClick={() => setToggleMenu(!toggleMenu)}>
           <FiMenu size={30} />
         </MenuButton>
       </TopBar>
-      {toggleMenu && <Menu />}
+      {toggleMenu && <Menu setToggleMenu={setToggleMenu} />}
     </Wrapper>
+    </>
   );
 };
 
+const SpacerDiv = styled.div`
+  height: 2rem;
+  background-color: aliceblue;
+`;
+
 const Wrapper = styled.div`
-  width: 34rem;
+  width: 35rem;
   position: fixed;
+  background-color: var(--background-color);
 `;
 
 const TopBar = styled.div`
@@ -30,9 +40,11 @@ const TopBar = styled.div`
   position: relative;
 `;
 
-const Title = styled.p`
+const Title = styled(Link)`
   font-weight: 700;
   font-size: 1.4rem;
+  text-decoration: none;
+  color: var(--font-color);
 `;
 
 const MenuButton = styled.button`

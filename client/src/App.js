@@ -51,7 +51,7 @@ const Container = styled.div`
   align-items: center;
   width: 35rem;
   /* height: 50rem; */
-  border: 1px solid red;
+  /* border: 1px solid red; */
 `;
 
 export default App;

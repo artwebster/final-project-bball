@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const Menu = () => {
+const Menu = ({setToggleMenu}) => {
   return (
-    <Wrapper>
+    <Wrapper onClick={() => setToggleMenu(false)}>
       <SectionLink to={"/games"}>GAMES</SectionLink>
       <SectionLink to={"/news"}>NEWS</SectionLink>
       <SectionLink to={"/standings"}>STANDINGS</SectionLink>
