@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState, useContext } from "react";
 import styled from "styled-components";
+import { DataContext } from "../Hooks/DataContext";
+import Loading from "../Loading";
 
 const Standings = () => {
-  const [standings, setStandings] = useState(null);
+  const { standings, getStandings } = useContext(DataContext)
   const [sortMode, setSortMode] = useState("2");
 
-  useEffect(() => {
-    fetch("/api/get-standings")
-      .then((res) => res.json())
-      .then((data) => setStandings(data.data));
-  }, []);
+  if (!standings) {
+    getStandings();
+    return <Loading />;
+  }
 
   const handleClick = (ev) => {
     setSortMode(ev.target.value);
   };
 
-  if (!standings) return <div>Loading...</div>;
+  if (!standings) return <Loading />
 
   let standingsArr = [];
   if (sortMode === "3") standingsArr = [[...standings]];

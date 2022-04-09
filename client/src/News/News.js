@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState, useContext } from "react";
 import styled from "styled-components";
 import NewsItem from "./NewsItem";
+import { DataContext } from "../Hooks/DataContext";
+import Loading from "../Loading";
 
 const News = () => {
-  const [newsItems, setNewsItems] = useState(null);
+  const { newsItems, getNews } = useContext(DataContext)
   const [focus, setFocus] = useState(null);
   const [readingStatus, setReadingStatus] = useState(false);
 
-  useEffect(() => {
-    fetch("/api/get-news-articles")
-    .then(res => res.json())
-    .then(data => setNewsItems(data.data.articles))
-    .catch(err => console.log("error:", err))
-  }, []);
+  if (!newsItems) {
+    getNews();
+    return <Loading />;
+  }
 
   return (
     <Wrapper>
@@ -20,8 +20,7 @@ const News = () => {
         setFocus(null)
         setReadingStatus(false)
         }}>News</Title>
-      {newsItems ? (
-        newsItems.map((article, index) => (
+      {newsItems.map((article, index) => (
           <NewsItem
             key={article.url}
             articleInfo={article}
@@ -32,18 +31,16 @@ const News = () => {
             setReadingStatus={setReadingStatus}
           />
         ))
-      ) : (
-        <div>Loading...</div>
-      )}
+       }
     </Wrapper>
   );
 };
+
+const Wrapper = styled.div``;
 
 const Title = styled.button`
   font-size: 3rem;
   font-weight: 700;
 `;
-
-const Wrapper = styled.div``;
 
 export default News;
