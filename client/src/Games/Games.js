@@ -1,44 +1,18 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
-import dayjs from "dayjs";
 
+import { DataContext } from "../Hooks/DataContext";
 import SingleGame from "./SingleGame";
 import GameDetails from "./GameDetails";
-import { useEffect } from "react";
+import Loading from "../Loading";
 
 const Games = () => {
-  const [games, setGames] = useState(null);
-  const [odds, setOdds] = useState(null);
+  const { games, odds } = useContext(DataContext);
   const [gameId, setGameId] = useState(null);
 
-  const today = dayjs().format("YYYY-MM-DD");
-  const time = Math.floor(dayjs().unix());
-  const endTime = time + 86400;
-
-  // fetching the odds for all games and putting the data into state to use, 
-  // faster than fetching individual game odds each time
-  const getOdds = () => {
-    fetch(`/api/get-game-odds?from=${time}&to=${endTime}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setOdds(data.data.events);
-      })
-      .catch((err) => console.log("err", err));
-  };
+  if (!games || !odds) return <Loading />
   
-  // fetching the scores and stats on mount, then calling the getOdds function
-  useEffect(() => {
-    console.log("function fired!");
-    fetch(`https://www.balldontlie.io/api/v1/games?dates[]=${today}`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("balldon'tliefetch", data);
-      setGames(data.data);
-    })
-    .then(getOdds);
-  }, []);
-  
-  // when a game is clicked, putting that game's data into state
+  // when a game is clicked, putting that game's id into state to render the details
   const handleGameClick = (gameid) => {
     if (gameId === gameid) {
       setGameId(null);
@@ -48,8 +22,7 @@ const Games = () => {
   return (
     <Container>
       <GameContainer>
-        {games &&
-          games.map((game) => {
+          {games.map((game) => {
             return (
               <>
                 <SingleGameContainer
@@ -81,7 +54,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 50px;
+  padding: 2.5rem;
 `;
 
 const GameContainer = styled.div`
