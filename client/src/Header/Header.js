@@ -48,8 +48,6 @@ const Title = styled(Link)`
 `;
 
 const MenuButton = styled.button`
-  background: none;
-  border: none;
 `;
 
 export default Header;

@@ -72,6 +72,7 @@ code {
 :root {
   --font-color: #333;
   --background-color: #eee;
+  --secondary-color: #d3d3d3;
   --link-color: cornflowerblue;
   --base-color: white;
   --inverse-base: black;
@@ -82,6 +83,7 @@ code {
 [data-theme="dark"] {
   --font-color: #eee;
   --background-color: #333;
+  --secondary-color: #505050;
   --link-color: lightblue;
   --base-color: black;
   --inverse-base: white;
@@ -99,6 +101,12 @@ a {
 
 p, h1, h2, h3, h4, h5, h6, button {
   color: var(--font-color)
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
 }
 
 `;

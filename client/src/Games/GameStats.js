@@ -78,7 +78,7 @@ const Grid = styled.div`
   grid-template-columns: 3fr 1fr 1fr 1fr 1fr 1fr 1fr;
   width: 100%;
   > .odd {
-    background-color: lightgray;
+    background-color: var(--secondary-color);
   }
   > .header {
     font-weight: 700;

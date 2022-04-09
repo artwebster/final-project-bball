@@ -93,8 +93,6 @@ const GameContainer = styled.div`
 
 const SingleGameContainer = styled.button`
   background-color: var(--base-color);
-  border: none;
-  cursor: pointer;
 `;
 
 export default Games;
