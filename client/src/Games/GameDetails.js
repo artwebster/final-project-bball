@@ -44,10 +44,8 @@ const Header = styled.div`
 `;
 
 const CatButton = styled.button`
-  background: none;
   width: 50%;
   border: 1px solid black;
-  cursor: pointer; 
   &.inActive {
     background-color: var(--highlight-color);
   }

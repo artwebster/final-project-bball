@@ -42,9 +42,6 @@ const News = () => {
 const Title = styled.button`
   font-size: 3rem;
   font-weight: 700;
-  background: none;
-  border: none;
-  cursor: pointer;
 `;
 
 const Wrapper = styled.div``;

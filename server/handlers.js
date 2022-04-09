@@ -3,7 +3,8 @@
 const fetch = require("node-fetch");
 
 require("dotenv").config();
-const { GNEWS, X_API_KEY } = process.env;
+const { GNEWS, X_API_KEY, SDIO_KEY } = process.env;
+const teams = require("./data/teams.json")
 
 const getNews = async (req, res) => {
   try {
@@ -42,7 +43,16 @@ const getOdds = async (req, res) => {
     }
 }
 
+const getStandings = async (req, res) => {
+  try {
+    res.status(200).json({ status: 200, data: teams, message: "Request successful"})
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message })
+  }
+}
+
 module.exports = {
   getNews,
-  getOdds
+  getOdds,
+  getStandings
 };

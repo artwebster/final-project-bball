@@ -28,10 +28,7 @@ const NewsItem = ({articleInfo, focus, setFocus, readingStatus, setReadingStatus
 };
 
 const Wrapper = styled.button`
-    background: none;
-    border: none;
     text-align: left;
-    cursor: pointer;
 `;
 
 const Headline = styled.h4``;

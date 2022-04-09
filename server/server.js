@@ -5,7 +5,7 @@ const morgan = require("morgan");
 
 const PORT = process.env.PORT || 8000;
 
-const { getNews, getOdds } = require("./handlers");
+const { getNews, getOdds, getStandings } = require("./handlers");
 
 express()
   .use(function (req, res, next) {
@@ -28,5 +28,6 @@ express()
   // endpoints
   .get("/api/get-news-articles", getNews)
   .get("/api/get-game-odds", getOdds)
+  .get("/api/get-standings", getStandings)
 
   .listen(PORT, () => console.info(`Listening on port ${PORT}`));
