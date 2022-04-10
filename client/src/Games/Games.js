@@ -5,10 +5,10 @@ import { DataContext } from "../Hooks/DataContext";
 import SingleGame from "./SingleGame";
 import GameDetails from "./GameDetails";
 import Loading from "../Loading";
+import DateBar from "./DateBar";
 
 const Games = () => {
-  const { games, odds } = useContext(DataContext);
-  const [gameId, setGameId] = useState(null);
+  const { games, odds, gameId, setGameId } = useContext(DataContext);
 
   if (!games || !odds) return <Loading />
   
@@ -21,6 +21,7 @@ const Games = () => {
 
   return (
     <Container>
+      <DateBar />
       <GameContainer>
           {games.map((game) => {
             return (
@@ -54,7 +55,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2.5rem;
+  padding: 0.5rem 2.5rem;
 `;
 
 const GameContainer = styled.div`

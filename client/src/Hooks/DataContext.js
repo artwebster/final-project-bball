@@ -5,12 +5,14 @@ export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const [games, setGames] = useState(null);
+  const [gameId, setGameId] = useState(null);
   const [odds, setOdds] = useState(null);
   const [newsItems, setNewsItems] = useState(null);
   const [standings, setStandings] = useState(null);
-
-  const today = dayjs().format("YYYY-MM-DD");
-  const time = Math.floor(dayjs().unix());
+  const [date, setDate] = useState(dayjs());
+  
+  const today = date.format("YYYY-MM-DD");
+  const time = Math.floor(date.unix());
   const endTime = time + 86400;
 
   const getNews = () => {
@@ -25,7 +27,7 @@ export const DataProvider = ({ children }) => {
       .then((res) => res.json())
       .then((data) => setStandings(data.data))
       .catch((err) => console.log("error:", err));
-  }
+  };
 
   const getOdds = () => {
     console.log("getOdds fired");
@@ -43,14 +45,32 @@ export const DataProvider = ({ children }) => {
   };
 
   // fetching game and odds data on load, everything else on demand
-  useEffect(()=> {
+  useEffect(() => {
     getGames();
     getOdds();
-  },[])
+  }, [date]);
+
+  // resetting the focused game whenever the date changes
+  useEffect(()=> {
+    setGameId(null);
+  }, [date])
 
   return (
     <DataContext.Provider
-      value={{ games, odds, newsItems, standings, getNews, getStandings, getOdds, getGames }}
+      value={{
+        games,
+        gameId,
+        odds,
+        newsItems,
+        standings,
+        date,
+        setDate,
+        setGameId,
+        getNews,
+        getStandings,
+        getOdds,
+        getGames,
+      }}
     >
       {children}
     </DataContext.Provider>
