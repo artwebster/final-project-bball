@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FiMenu } from "react-icons/fi";
 import Menu from "./Menu/Menu";
 import tipoff from "../assets/title_caps.svg";
+import { DataContext } from "../Hooks/DataContext";
+import dayjs from "dayjs";
 
 const Header = () => {
+  const { setDate } = useContext(DataContext)
   const [toggleMenu, setToggleMenu] = useState(false);
 
   return (
@@ -13,7 +16,7 @@ const Header = () => {
     <SpacerDiv/>
     <Wrapper>
       <TopBar>
-        <Title to={"/"}><Logo src={tipoff} /></Title>
+        <Title to={"/"} onClick={() => setDate(dayjs())}><Logo src={tipoff} /></Title>
         <MenuButton onClick={() => setToggleMenu(!toggleMenu)}>
           <FiMenu style={{ fontSize: 30, color: "var(--font-color)" }} />
         </MenuButton>
