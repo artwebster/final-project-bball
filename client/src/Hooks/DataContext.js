@@ -5,6 +5,7 @@ export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const [games, setGames] = useState(null);
+  const [gamesSched, setGamesSched] = useState(null)
   const [gameId, setGameId] = useState(null);
   const [odds, setOdds] = useState(null);
   const [newsItems, setNewsItems] = useState(null);
@@ -44,6 +45,20 @@ export const DataProvider = ({ children }) => {
       .then((data) => setGames(data.data));
   };
 
+  const getGamesSched = (date) => {
+    const start = date.format("YYYY-MM-DD");
+    const end = date.add(7, "day").format("YYYY-MM-DD");
+        fetch(`https://www.balldontlie.io/api/v1/games?per_page=100&start_date=${start}&end_date=${end}`)
+        .then((res) => res.json())
+        .then((data) => {
+          let newArr = [];
+          data.data.forEach((game) => {
+            newArr.push(game);
+          });
+          setGamesSched(newArr);
+        })
+  }
+
   // fetching game and odds data on load, everything else on demand
   useEffect(() => {
     getGames();
@@ -59,6 +74,7 @@ export const DataProvider = ({ children }) => {
     <DataContext.Provider
       value={{
         games,
+        gamesSched,
         gameId,
         odds,
         newsItems,
@@ -70,6 +86,7 @@ export const DataProvider = ({ children }) => {
         getStandings,
         getOdds,
         getGames,
+        getGamesSched,
       }}
     >
       {children}
