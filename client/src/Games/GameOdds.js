@@ -10,7 +10,7 @@ const GameOdds = ({ odds, gamePreDetails }) => {
       )
     : null;
 
-  if (!eventOdds) return <div>No market data available, sorry!</div>;
+    if (!eventOdds || Object.keys(eventOdds.markets).length === 0) return <div>No market data available, sorry!</div>;
 
   // parsing the odds information from the handicap API
   

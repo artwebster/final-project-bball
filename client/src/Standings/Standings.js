@@ -5,7 +5,7 @@ import Loading from "../Loading";
 
 const Standings = () => {
   const { standings, getStandings } = useContext(DataContext)
-  const [sortMode, setSortMode] = useState("2");
+  const [sortMode, setSortMode] = useState("ConferenceRank");
 
   if (!standings) {
     getStandings();
@@ -19,13 +19,13 @@ const Standings = () => {
   if (!standings) return <Loading />
 
   let standingsArr = [];
-  if (sortMode === "3") standingsArr = [[...standings]];
-  if (sortMode === "2")
+  if (sortMode === "LeagueRank") standingsArr = [[...standings]];
+  if (sortMode === "ConferenceRank")
     standingsArr = [
       standings.filter((team) => team.Conference === "Eastern"),
       standings.filter((team) => team.Conference === "Western"),
     ];
-  if (sortMode === "1")
+  if (sortMode === "DivisionRank")
     standingsArr = [
       standings.filter((team) => team.Division === "Atlantic"),
       standings.filter((team) => team.Division === "Central"),
@@ -41,9 +41,9 @@ const Standings = () => {
         <Header>
           <h1>Standings</h1>
           <DisplaySelect onClick={handleClick}>
-            <Selection value={1}>Division</Selection>
-            <Selection value={2}>Conference</Selection>
-            <Selection value={3}>League</Selection>
+            <Selection value={"DivisionRank"}>Division</Selection>
+            <Selection value={"ConferenceRank"}>Conference</Selection>
+            <Selection value={"LeagueRank"}>League</Selection>
           </DisplaySelect>
         </Header>
         <TableDiv>
@@ -54,8 +54,8 @@ const Standings = () => {
                   <tr>
                     <th></th>
                     <th>
-                      {sortMode === "2" && grouping[0].Conference}
-                      {sortMode === "1" && grouping[0].Division}
+                      {sortMode === "ConferenceRank" && grouping[0].Conference}
+                      {sortMode === "DivisionRank" && grouping[0].Division}
                     </th>
                     <th>W</th>
                     <th>L</th>
@@ -66,7 +66,7 @@ const Standings = () => {
                   </tr>
                 </thead>
                 {grouping
-                  .sort((a, b) => b.Percentage - a.Percentage)
+                  .sort((a, b) => a[sortMode] - b[sortMode])
                   .map((team, index) => {
                     return (
                       <tbody key={index}>
