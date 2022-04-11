@@ -60,15 +60,12 @@ export const DataProvider = ({ children }) => {
   }
 
   // fetching game and odds data on load, everything else on demand
+  // and resetting the focused game whenever the date changes
   useEffect(() => {
     getGames();
     getOdds();
-  }, [date]);
-
-  // resetting the focused game whenever the date changes
-  useEffect(()=> {
     setGameId(null);
-  }, [date])
+  }, [date]);
 
   return (
     <DataContext.Provider

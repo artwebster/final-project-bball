@@ -5,7 +5,7 @@ const morgan = require("morgan");
 
 const PORT = process.env.PORT || 8000;
 
-const { getNews, getOdds, getStandings } = require("./handlers");
+const { getGames, getNews, getOdds, getStandings } = require("./handlers");
 
 express()
   .use(function (req, res, next) {
@@ -26,6 +26,7 @@ express()
   .use("/", express.static(__dirname + "/"))
 
   // endpoints
+  .get("/api/get-games/:date", getGames)
   .get("/api/get-news-articles", getNews)
   .get("/api/get-game-odds", getOdds)
   .get("/api/get-standings", getStandings)

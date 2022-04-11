@@ -70,7 +70,7 @@ code {
 }
 
 :root {
-  --font-color: #333;
+  --font-color: #202020;
   --background-color: #eee;
   --secondary-color: #d3d3d3;
   --link-color: cornflowerblue;
@@ -82,7 +82,7 @@ code {
 /* 2 */
 [data-theme="dark"] {
   --font-color: #eee;
-  --background-color: #333;
+  --background-color: #202020;
   --secondary-color: #505050;
   --link-color: lightblue;
   --base-color: black;
