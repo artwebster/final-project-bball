@@ -6,6 +6,8 @@ const morgan = require("morgan");
 const PORT = process.env.PORT || 8000;
 
 const { getGames, getNews, getOdds, getStandings } = require("./handlers");
+const { addUser } = require("./handlers_FB");
+
 
 express()
   .use(function (req, res, next) {
@@ -30,5 +32,7 @@ express()
   .get("/api/get-news-articles", getNews)
   .get("/api/get-game-odds", getOdds)
   .get("/api/get-standings", getStandings)
+
+  .post("/api/add-user", addUser)
 
   .listen(PORT, () => console.info(`Listening on port ${PORT}`));
