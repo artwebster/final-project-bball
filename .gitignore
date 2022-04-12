@@ -1,3 +1,4 @@
 .env
 .yarn
 */node_modules
+server/data/tipoff-firebase-credentials.json
