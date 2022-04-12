@@ -6,7 +6,7 @@ const morgan = require("morgan");
 const PORT = process.env.PORT || 8000;
 
 const { getGames, getNews, getOdds, getStandings } = require("./handlers");
-const { addUser } = require("./handlers_FB");
+const { createAccount, loginAccount, checkEmail } = require("./handlers_FB");
 
 
 express()
@@ -33,6 +33,9 @@ express()
   .get("/api/get-game-odds", getOdds)
   .get("/api/get-standings", getStandings)
 
-  .post("/api/add-user", addUser)
+  .post("/api/login-account", loginAccount)
+  .post("/api/create-account", createAccount)
+  .post("/api/check-email", checkEmail)
+
 
   .listen(PORT, () => console.info(`Listening on port ${PORT}`));

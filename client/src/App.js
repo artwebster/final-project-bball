@@ -8,6 +8,7 @@ import News from "./News/News";
 import Schedule from "./Schedule/Schedule";
 import Standings from "./Standings/Standings";
 import SignIn from "./SignIn/SignIn";
+import Account from "./Account/Account";
 
 const App = () => {
   return (
@@ -28,6 +29,9 @@ const App = () => {
             </Route>
             <Route exact path="/signin">
               <SignIn />
+            </Route>
+            <Route exact path="/account">
+              <Account />
             </Route>
             <Route path="/">
               <Games />
