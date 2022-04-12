@@ -67,4 +67,17 @@ const checkEmail = async (req, res) => {
   }
 }
 
-module.exports = { createAccount, loginAccount, checkEmail };
+const savePicks = async (req, res) => {
+  try {
+    const {picks, user, gameid} = req.body;
+
+    const update = await users.doc(user).collection('picks').doc(`${gameid}`).set(picks);
+
+    res.status(200).json({ status: 200, data: picks, message: "Picks updated"})
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message })
+  }
+
+};
+
+module.exports = { createAccount, loginAccount, checkEmail, savePicks };
