@@ -2,11 +2,13 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ColorContext } from "../../Hooks/ColorContext";
+import { AccountContext } from "../../Hooks/AccountContext";
 
-const Menu = ({setToggleMenu}) => {
+const Menu = ({ setToggleMenu }) => {
   const { setTheme, theme } = useContext(ColorContext);
+  const { userInfo } = useContext(AccountContext);
   const handleDarkMode = () => {
-    theme === "light" ? setTheme("dark"): setTheme("light");
+    theme === "light" ? setTheme("dark") : setTheme("light");
   };
 
   return (
@@ -15,8 +17,15 @@ const Menu = ({setToggleMenu}) => {
       <SectionLink to={"/news"}>NEWS</SectionLink>
       <SectionLink to={"/standings"}>STANDINGS</SectionLink>
       <SectionLink to={"/schedule"}>SCHEDULE</SectionLink>
-      <SectionLink to={"/signin"}>SIGN IN</SectionLink>
-      <DarkModeSelector><p>change mode:</p><DarkMode onClick={() => handleDarkMode()} /></DarkModeSelector>
+      {userInfo ? (
+        <SectionLink to={"/account"}>MY ACCOUNT</SectionLink>
+      ) : (
+        <SectionLink to={"/signin"}>SIGN IN</SectionLink>
+      )}
+      <DarkModeSelector>
+        <p>change mode:</p>
+        <DarkMode onClick={() => handleDarkMode()} />
+      </DarkModeSelector>
     </Wrapper>
   );
 };
@@ -55,6 +64,5 @@ const DarkMode = styled.div`
   border-radius: 50%;
   background-color: var(--background-color);
 `;
-
 
 export default Menu;

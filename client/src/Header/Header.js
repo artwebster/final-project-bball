@@ -6,23 +6,30 @@ import Menu from "./Menu/Menu";
 import tipoff from "../assets/title_caps.svg";
 import { DataContext } from "../Hooks/DataContext";
 import dayjs from "dayjs";
+import { AccountContext } from "../Hooks/AccountContext";
 
 const Header = () => {
-  const { setDate } = useContext(DataContext)
+  const { setDate } = useContext(DataContext);
+  const { userInfo } = useContext(AccountContext);
   const [toggleMenu, setToggleMenu] = useState(false);
 
   return (
     <>
-    <SpacerDiv/>
-    <Wrapper>
-      <TopBar>
-        <Title to={"/"} onClick={() => setDate(dayjs())}><Logo src={tipoff} /></Title>
-        <MenuButton onClick={() => setToggleMenu(!toggleMenu)}>
-          <FiMenu style={{ fontSize: 30, color: "var(--font-color)" }} />
-        </MenuButton>
-      </TopBar>
-      {toggleMenu && <Menu setToggleMenu={setToggleMenu} />}
-    </Wrapper>
+      <SpacerDiv />
+      <Wrapper>
+        <TopBar>
+          <Title to={"/"} onClick={() => setDate(dayjs())}>
+            <Logo src={tipoff} />
+          </Title>
+          <RightDiv>
+            {(userInfo) && <ProfileLink to={"/account"}>Welcome, {userInfo.username}</ProfileLink>}
+            <MenuButton onClick={() => setToggleMenu(!toggleMenu)}>
+              <FiMenu style={{ fontSize: 30, color: "var(--font-color)" }} />
+            </MenuButton>
+          </RightDiv>
+        </TopBar>
+        {toggleMenu && <Menu setToggleMenu={setToggleMenu} />}
+      </Wrapper>
     </>
   );
 };
@@ -45,6 +52,11 @@ const TopBar = styled.div`
   height: 3.5rem;
 `;
 
+const RightDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const Title = styled(Link)`
   font-weight: 700;
   font-size: 1.4rem;
@@ -56,7 +68,10 @@ const Logo = styled.img`
   width: 100px;
 `;
 
-const MenuButton = styled.button`
+const ProfileLink = styled(Link)`
+  text-decoration: none;
 `;
+
+const MenuButton = styled.button``;
 
 export default Header;
