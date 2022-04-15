@@ -3,14 +3,14 @@ import styled from "styled-components";
 import GameStats from "./GameStats";
 import GameOdds from "./GameOdds";
 
-const GameDetails = ({ gameId, gamePreDetails, odds }) => {
+const GameDetails = ({ gamePreDetails, odds }) => {
   const [detailsPage, setDetailsPage] = useState(true);
   const [gameDetails, setGameDetails] = useState(null);
 
   // getting the individual player stats for the selected game
   const getStats = () => {
     console.log("fetching stats");
-    fetch(`https://www.balldontlie.io/api/v1/stats?game_ids[]=${gameId}`)
+    fetch(`https://www.balldontlie.io/api/v1/stats?game_ids[]=${gamePreDetails.bdl_id}`)
       .then((res) => res.json())
       .then((data) => setGameDetails(data.data));
   };

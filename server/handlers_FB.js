@@ -67,4 +67,20 @@ const checkEmail = async (req, res) => {
   }
 }
 
-module.exports = { createAccount, loginAccount, checkEmail };
+const savePicks = async (req, res) => {
+  try {
+    const {picks, userName, date, user } = req.body;
+
+    const updateObj = { [userName]: picks}
+
+    const update = await users.doc(user).collection('picks').doc(date).set(picks, {merge: true});
+    // const update2 = await db.collection("games").doc(gameId).collection("data").doc("picks").set(updateObj, {merge: true})
+
+    res.status(200).json({ status: 200, data: picks, message: "Picks updated"})
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message })
+  }
+
+};
+
+module.exports = { createAccount, loginAccount, checkEmail, savePicks };

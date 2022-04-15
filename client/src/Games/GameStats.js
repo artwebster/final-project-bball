@@ -2,13 +2,13 @@ import styled from "styled-components";
 
 const GameStats = ({ gameDetails, gamePreDetails }) => {
   if (!gameDetails) return <div>No game stats yet, check back after tip off!</div>;
- 
+
   // dividing the player stats into teams
   let teamA = gameDetails.filter(
-    (player) => player.team.city === gamePreDetails.home_team.city
+    (player) => player.team.city === gamePreDetails.homeTeam.city
   );
   let teamB = gameDetails.filter(
-    (player) => player.team.city === gamePreDetails.visitor_team.city
+    (player) => player.team.city === gamePreDetails.awayTeam.city
   );
 
   // sorting player stats based on points scored
@@ -17,7 +17,7 @@ const GameStats = ({ gameDetails, gamePreDetails }) => {
     
   return (
     <>
-      <TeamName>{gamePreDetails.visitor_team.full_name}</TeamName>
+      <TeamName>{gamePreDetails.awayTeam.fullName}</TeamName>
       <Grid>
         <div className="header">Name</div>
         <div className="header">Min</div>
@@ -43,7 +43,7 @@ const GameStats = ({ gameDetails, gamePreDetails }) => {
           );
         })}
         </Grid>
-        <TeamName>{gamePreDetails.home_team.full_name}</TeamName>
+        <TeamName>{gamePreDetails.homeTeam.fullName}</TeamName>
         <Grid>
         <div className="header">Name</div>
         <div className="header">Min</div>

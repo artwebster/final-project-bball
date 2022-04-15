@@ -9,6 +9,8 @@ import Schedule from "./Schedule/Schedule";
 import Standings from "./Standings/Standings";
 import SignIn from "./SignIn/SignIn";
 import Account from "./Account/Account";
+import Fantasy from "./Fantasy/Fantasy";
+import Pickem from "./Fantasy/Pickem/Pickem";
 
 const App = () => {
   return (
@@ -26,6 +28,12 @@ const App = () => {
             </Route>
             <Route exact path="/standings">
               <Standings />
+            </Route>
+            <Route exact path="/fantasy">
+              <Fantasy />
+            </Route>
+            <Route exact path="/pickem">
+              <Pickem />
             </Route>
             <Route exact path="/signin">
               <SignIn />
