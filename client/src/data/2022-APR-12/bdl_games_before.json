@@ -1,0 +1,60 @@
+[
+    {
+      "id": 830509,
+      "date": "2022-04-12T00:00:00.000Z",
+      "home_team": {
+        "id": 18,
+        "abbreviation": "MIN",
+        "city": "Minnesota",
+        "conference": "West",
+        "division": "Northwest",
+        "full_name": "Minnesota Timberwolves",
+        "name": "Timberwolves"
+      },
+      "home_team_score": 0,
+      "period": 0,
+      "postseason": true,
+      "season": 2021,
+      "status": "9:30 PM ET",
+      "time": "",
+      "visitor_team": {
+        "id": 13,
+        "abbreviation": "LAC",
+        "city": "LA",
+        "conference": "West",
+        "division": "Pacific",
+        "full_name": "LA Clippers",
+        "name": "Clippers"
+      },
+      "visitor_team_score": 0
+    },
+    {
+      "id": 830510,
+      "date": "2022-04-12T00:00:00.000Z",
+      "home_team": {
+        "id": 3,
+        "abbreviation": "BKN",
+        "city": "Brooklyn",
+        "conference": "East",
+        "division": "Atlantic",
+        "full_name": "Brooklyn Nets",
+        "name": "Nets"
+      },
+      "home_team_score": 0,
+      "period": 0,
+      "postseason": true,
+      "season": 2021,
+      "status": "7:00 PM ET",
+      "time": "",
+      "visitor_team": {
+        "id": 6,
+        "abbreviation": "CLE",
+        "city": "Cleveland",
+        "conference": "East",
+        "division": "Central",
+        "full_name": "Cleveland Cavaliers",
+        "name": "Cavaliers"
+      },
+      "visitor_team_score": 0
+    }
+  ]

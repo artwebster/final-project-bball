@@ -8,9 +8,9 @@ import Loading from "../Loading";
 import DateBar from "./DateBar";
 
 const Games = () => {
-  const { games, odds, gameId, setGameId } = useContext(DataContext);
+  const { games, gameId, setGameId, date } = useContext(DataContext);
 
-  if (!games || !odds) return <Loading />
+  if (!games) return <Loading />
   
   // when a game is clicked, putting that game's id into state to render the details
   const handleGameClick = (gameid) => {
@@ -18,7 +18,7 @@ const Games = () => {
       setGameId(null);
     } else setGameId(gameid);
   };
-
+    
   return (
     <Container>
       <DateBar />
@@ -34,13 +34,12 @@ const Games = () => {
                     gameData={game}
                     key={game.id}
                     selectedGame={gameId}
+                    date={date}
                   />
                 </SingleGameContainer>
                 {gameId === game.id && (
                   <GameDetails
-                    gameId={gameId}
                     gamePreDetails={game}
-                    odds={odds}
                   />
                 )}
               </>

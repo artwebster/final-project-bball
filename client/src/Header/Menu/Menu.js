@@ -17,6 +17,7 @@ const Menu = ({ setToggleMenu }) => {
       <SectionLink to={"/news"}>NEWS</SectionLink>
       <SectionLink to={"/standings"}>STANDINGS</SectionLink>
       <SectionLink to={"/schedule"}>SCHEDULE</SectionLink>
+      <SectionLink to={"/fantasy"}>FANTASY</SectionLink>
       {userInfo ? (
         <SectionLink to={"/account"}>MY ACCOUNT</SectionLink>
       ) : (

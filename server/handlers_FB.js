@@ -69,9 +69,12 @@ const checkEmail = async (req, res) => {
 
 const savePicks = async (req, res) => {
   try {
-    const {picks, user, gameid} = req.body;
+    const {picks, userName, date, user } = req.body;
 
-    const update = await users.doc(user).collection('picks').doc(`${gameid}`).set(picks);
+    const updateObj = { [userName]: picks}
+
+    const update = await users.doc(user).collection('picks').doc(date).set(picks, {merge: true});
+    // const update2 = await db.collection("games").doc(gameId).collection("data").doc("picks").set(updateObj, {merge: true})
 
     res.status(200).json({ status: 200, data: picks, message: "Picks updated"})
   } catch (err) {

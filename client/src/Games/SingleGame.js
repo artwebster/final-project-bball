@@ -1,17 +1,28 @@
 import styled from "styled-components";
+import dayjs from "dayjs";
+import * as TEAM from "../data/constants"
 
-const SingleGame = ({ gameData, selectedGame }) => {
+const SingleGame = ({ gameData, selectedGame, date }) => {
   let focus = gameData.id === selectedGame ? true : false;
+
+  let status = gameData.status;
+  if (date > dayjs()) {
+    status = dayjs(status).format("h:mm")
+  }
+
+  let awayTeam = gameData.awayTeam.abbr || gameData.awayTeam;
+  let homeTeam = gameData.homeTeam.abbr || gameData.homeTeam;
+  if (homeTeam === "NO") homeTeam = "NOP";
 
   return (
     <GameDiv focus={focus}>
       <Teams>
-        {gameData.visitor_team.city} VS {gameData.home_team.city}
+        {TEAM[awayTeam].location} VS {TEAM[homeTeam].location}
       </Teams>
       <Score>
-        {gameData.visitor_team_score} - {gameData.home_team_score}
+        {gameData.awayTeamScore} - {gameData.homeTeamScore}
       </Score>
-      <Status>{gameData.status}</Status>
+      <Status>{status}</Status>
     </GameDiv>
   );
 };
