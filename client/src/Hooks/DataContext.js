@@ -11,9 +11,9 @@ export const DataProvider = ({ children }) => {
   const [newsItems, setNewsItems] = useState(null);
   const [standings, setStandings] = useState(null);
   const [date, setDate] = useState(dayjs());
+  const [liveScores, setLiveScores] = useState(null)
 
   const today = date.format("YYYY-MM-DD");
-  const time = Math.floor(date.unix());
 
   const getNews = () => {
     fetch("/api/get-news-articles")
@@ -45,68 +45,28 @@ export const DataProvider = ({ children }) => {
   };
 
   const getGames = () => {
-    console.log("getGames fired");
-    if (date > dayjs()) {
-      fetch(`/api/get-games/${today}`)
-      .then(res => res.json())
-      .then(data => {
-        setGames(data.data);
-        data.data.forEach((game) => {
-          getOdds(
-          game.date,
-          game.awayTeam,
-          game.homeTeam
-        )
-          });
-      })
-    } else {
-      fetch(`https://www.balldontlie.io/api/v1/games?dates[]=${today}`)
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("data.data hit me", data.data);
-          let newArr = [];
-          data.data.forEach((game) => {
-            getOdds(
-              game.date.slice(0, 10),
-              game.visitor_team.abbreviation,
-              game.home_team.abbreviation
-            );
-            newArr.push({
-              bdl_id: game.id,
-              date: game.date.slice(0, 10),
-              homeTeam: {
-                abbr: game.home_team.abbreviation,
-                city: game.home_team.city,
-                fullName: game.home_team.full_name,
-              },
-              homeTeamScore: game.home_team_score,
-              awayTeamScore: game.visitor_team_score,
-              awayTeam: {
-                abbr: game.visitor_team.abbreviation,
-                city: game.visitor_team.city,
-                fullName: game.visitor_team.full_name,
-              },
-              status: game.status,
-              time: game.time,
-              id: `${game.date.slice(0, 10)}&${
-                game.visitor_team.abbreviation
-              }&${game.home_team.abbreviation}`,
-            });
-          });
-
-          setGames(newArr);
-        });
-    }
+    console.log("getGames2 fired");
+    fetch(`/api/get-games2/${today}`)
+    .then(res => res.json())
+    .then(data => setGames(data.data))
   };
 
+  const getLiveScores = () => {
+    if (today !== dayjs().format("YYYY-MM-DD")) return;
+    console.log("getLiveScores fired");
+    fetch("/api/get-live-scores")
+    .then(res => res.json())
+    .then(data => setLiveScores(data.data))
+  }
+
   const getGamesSched = (date) => {
+    console.log("getGamesSched fired");
     const start = date.format("YYYY-MM-DD");
     const end = date.add(7, "day").format("YYYY-MM-DD");
-    fetch(
-      `https://www.balldontlie.io/api/v1/games?per_page=100&start_date=${start}&end_date=${end}`
-    )
+    fetch(`https://www.balldontlie.io/api/v1/games?per_page=100&start_date=${start}&end_date=${end}`)
       .then((res) => res.json())
       .then((data) => {
+        console.log("no data?", data);
         let newArr = [];
         data.data.forEach((game) => {
           newArr.push(game);
@@ -119,6 +79,7 @@ export const DataProvider = ({ children }) => {
   // and resetting the focused game whenever the date changes
   useEffect(() => {
     getGames();
+    getLiveScores();
     // getOdds();
     setGameId(null);
   }, [date]);
@@ -133,6 +94,7 @@ export const DataProvider = ({ children }) => {
         newsItems,
         standings,
         date,
+        liveScores,
         setDate,
         setGameId,
         getNews,

@@ -3,56 +3,23 @@
 const fetch = require("node-fetch");
 const dayjs = require('dayjs')
 const { db, users } = require("./config");
+const gameList = require("./data/games.json")
 
 require("dotenv").config();
-const { GNEWS, X_API_KEY, SDIO_KEY } = process.env;
+const { GNEWS, X_API_KEY, SDIO_KEY, TSDB_KEY } = process.env;
 const teams = require("./data/teams.json");
-// let { games, boxscores } = require("./data/games");
-// const gameList = require("./data/2022-APR-12/sd_games_by_date_before.json");
 
-// -getting a list of the day's games and current boxscores
-// -if the server has already made this request, then it instead returns the data from the "local storage" js files
-// -not ideal, especially for box scores, but a temp solution to avoid burning through all the free calls to this api
+const getGames2 = async (req, res) => {
+  try {
+    const date = req.params.date;
+    const response = await gameList.filter((game) => game.date === date)
+    
+  res.status(200).json({ status: 200, data: response, message: "Request successful"})
 
-// const getGames = async (req, res) => {
-//   try {
-//     const date = req.params.date;
-
-//     if (games.length < 1) {
-//       const response = await fetch(
-//         `https://api.sportsdata.io/v3/nba/scores/json/GamesByDate/${date}`,
-//         {
-//           headers: {
-//             method: "GET",
-//             "Ocp-Apim-Subscription-Key": SDIO_KEY,
-//           },
-//         }
-//       );
-//       const data = await response.json();
-//       games = [...data]
-//     }
-
-//     if (boxscores.length < 1) {
-//       const response = await fetch(
-//         `https://api.sportsdata.io/v3/nba/stats/json/BoxScores/${date}`,
-//         {
-//           headers: {
-//             method: "GET",
-//             "Ocp-Apim-Subscription-Key": SDIO_KEY,
-//           },
-//         }
-//       );
-//       const data = await response.json();
-//       boxscores = [...data];
-//     }
-
-//     res
-//       .status(200)
-//       .json({ status: 200, games, boxscores, message: "Request successful" });
-//   } catch (err) {
-//     res.status(500).json({ status: 500, message: err.message });
-//   }
-// };
+  } catch (err) {
+    res.status(500).json({ status: 500, message: "Server error"})
+  }
+}
 
 const getGames = async (req, res) => {
   try {
@@ -105,6 +72,28 @@ const getGames = async (req, res) => {
     res.status(500).json({ status: 500, message: err.message });
   }
 };
+
+const getLiveScores = async (req, res) => {
+  try {
+    await fetch(`https://www.thesportsdb.com/api/v2/json/${TSDB_KEY}/livescore.php?l=4387`)
+    .then(res => res.json())
+    .then(data => {
+      let liveGames = {};
+      data.events.forEach((liveGame) => {
+        liveGames[liveGame.idEvent] = {
+          homeScore: liveGame.intHomeScore,
+          awayScore: liveGame.intAwayScore,
+          quarter: liveGame.strStatus,
+          progress: liveGame.strProgress,
+        }
+      });
+      res.status(200).json({ status: 200, data: liveGames, message: "Request successful"})
+    });
+
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message })
+  }
+}
 
 const getOddsNew = async (req, res) => {
     try {
@@ -350,4 +339,6 @@ module.exports = {
   getOdds,
   getOddsNew,
   getStandings,
+  getGames2,
+  getLiveScores,
 };

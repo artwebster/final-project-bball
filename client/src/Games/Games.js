@@ -1,51 +1,47 @@
-import { useState, useContext, useEffect } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
 
 import { DataContext } from "../Hooks/DataContext";
 import SingleGame from "./SingleGame";
-import GameDetails from "./GameDetails";
 import Loading from "../Loading";
 import DateBar from "./DateBar";
+import GameDetails from "./GameDetails";
 
 const Games = () => {
   const { games, gameId, setGameId, date } = useContext(DataContext);
+  const [currentGame, setCurrentGame] = useState(null)
 
   if (!games) return <Loading />
-  
+
+
+
   // when a game is clicked, putting that game's id into state to render the details
-  const handleGameClick = (gameid) => {
+  const handleGameClick = (gameid, index) => {
     if (gameId === gameid) {
       setGameId(null);
+      setCurrentGame([games[index]]);
     } else setGameId(gameid);
   };
-    
+
   return (
     <Container>
-      <DateBar />
+      <DateBar setCurrentGame={setCurrentGame} />
       <GameContainer>
-          {games.map((game) => {
+          {(currentGame || games).map((game, index) => {
             return (
-              <>
-                <SingleGameContainer
-                  onClick={() => handleGameClick(game.id)}
-                  key={"gc" + game.id}
-                >
-                  <SingleGame
-                    gameData={game}
-                    key={game.id}
-                    selectedGame={gameId}
-                    date={date}
-                  />
-                </SingleGameContainer>
-                {gameId === game.id && (
-                  <GameDetails
-                    gamePreDetails={game}
-                  />
-                )}
-              </>
+              <SingleGame 
+                handleGameClick={handleGameClick}
+                gameData={game}
+                index={index}
+                key={game.gameId}
+                selectedGame={gameId}
+                date={date}
+                currentGame={currentGame}
+              />
             );
           })}
       </GameContainer>
+      {(currentGame) && <GameDetails gameInfo={currentGame[0]}/>}
     </Container>
   );
 };
@@ -54,7 +50,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem 2.5rem;
+  padding: 0 2.5rem;
 `;
 
 const GameContainer = styled.div`
@@ -62,10 +58,6 @@ const GameContainer = styled.div`
   flex-direction: column;
   align-items: baseline;
   justify-content: flex-start;
-`;
-
-const SingleGameContainer = styled.button`
-  background-color: var(--base-color);
 `;
 
 export default Games;

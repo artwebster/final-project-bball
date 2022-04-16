@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import styled from "styled-components";
 import { DataContext } from "../Hooks/DataContext";
+import { useHistory } from "react-router-dom";
 
-const DateBar = () => {
+const DateBar = ({setCurrentGame}) => {
   const { date, setDate } = useContext(DataContext);
+  const history = useHistory();
 
   let yesterday = date.add(-1, "day");
   let tomorrow = date.add(1, "day");
@@ -11,6 +13,8 @@ const DateBar = () => {
   // changing the "current" date based on what the user clicks
   const handleDateClick = (val) => {
     setDate(date.add(val, "day"));
+    setCurrentGame(null);
+    history.push("/");
   };
 
   return (
@@ -19,7 +23,7 @@ const DateBar = () => {
         <span>{yesterday.format("ddd").toUpperCase()}</span>
         <span>{yesterday.format("MMM D")}</span>
       </Date>
-      <Date>
+      <Date onClick={() => handleDateClick(0)}>
         <span>{date.format("ddd").toUpperCase()}</span>
         <span>{date.format("MMM D")}</span>
       </Date>
@@ -33,7 +37,7 @@ const DateBar = () => {
 
 const Wrapper = styled.div`
   display: flex;
-  margin-bottom: 1rem;
+  margin: 1rem;
 `;
 
 const Date = styled.button`
