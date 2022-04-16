@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import styled from "styled-components";
 
 import { DataContext } from "../Hooks/DataContext";
@@ -24,6 +24,8 @@ const Schedule = () => {
     day = day.add(1, "day");
   }
 
+  console.log("gameSched", gamesSched);
+
   return (
     <Wrapper>
       {(modal) && <CalendarModal setModal={setModal} getGamesSched={getGamesSched} setDate={setDate} />}
@@ -36,21 +38,22 @@ const Schedule = () => {
           return (
             <>
               <h2>{dayjs(day, "YYYY-MM-DD").format("ddd MMM DD")}</h2>
-              {gamesSched.filter((game) => game.date === day)
+              {gamesSched.filter((game) => game.date.slice(0,10) === day)
                 .length > 0 ? (
                 gamesSched
-                  .filter((game) => game.date === day)
+                  .filter((game) => game.date.slice(0,10) === day)
                   .map((game) => {
+                    console.log("game????", game);
                     return (
                       <GameDiv key={game.id}>
                         <NameDiv>
-                          <div className="city">{game.homeTeam.fullName}</div>
+                          <div className="city">{game.home_team.full_name}</div>
                           <div> VS </div>
-                          <div className="city">{game.awayTeam.fullName}</div>
+                          <div className="city">{game.visitor_team.full_name}</div>
                         </NameDiv>
                         <ScoreDiv>
-                          <div className="score">{game.homeTeamScore}</div>
-                          <div className="score">-{game.awayTeamScore}</div>
+                          <div className="score">{game.home_team_score}</div>
+                          <div className="score">-{game.visitor_team_score}</div>
                         </ScoreDiv>
                       </GameDiv>
                     );
