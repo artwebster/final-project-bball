@@ -29,14 +29,13 @@ export const DataProvider = ({ children }) => {
       .catch((err) => console.log("error:", err));
   };
 
-  const getOdds = (gameDate, awayTeam, homeTeam) => {
+  const getOdds = (gameId) => {
     console.log("getOdds fired");
     fetch(
-      `/api/get-game-odds-new?date=${gameDate}&away=${awayTeam}&home=${homeTeam}`
+      `/api/get-game-odds/${gameId}`
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log("data straight from fetch", data);
         setOdds((state) => ({
           ...state,
           [data.game]: data.odds,
@@ -45,8 +44,8 @@ export const DataProvider = ({ children }) => {
   };
 
   const getGames = () => {
-    console.log("getGames2 fired");
-    fetch(`/api/get-games2/${today}`)
+    console.log("getGames fired");
+    fetch(`/api/get-games/${today}`)
     .then(res => res.json())
     .then(data => setGames(data.data))
   };
@@ -66,7 +65,6 @@ export const DataProvider = ({ children }) => {
     fetch(`https://www.balldontlie.io/api/v1/games?per_page=100&start_date=${start}&end_date=${end}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("no data?", data);
         let newArr = [];
         data.data.forEach((game) => {
           newArr.push(game);
@@ -75,12 +73,11 @@ export const DataProvider = ({ children }) => {
       });
   };
 
-  // fetching game and odds data on load, everything else on demand
+  // fetching (live) game data on load, everything else on demand
   // and resetting the focused game whenever the date changes
   useEffect(() => {
     getGames();
     getLiveScores();
-    // getOdds();
     setGameId(null);
   }, [date]);
 

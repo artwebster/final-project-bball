@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import * as TEAM from "../data/constants";
 import Loading from "../Loading";
 import { useContext } from "react";
@@ -8,16 +9,18 @@ import { DataContext } from "../Hooks/DataContext";
 const SingleGame = ({
   gameData,
   selectedGame,
-  currentGame,
   index,
   handleGameClick,
 }) => {
   const { liveScores } = useContext(DataContext);
 
-  let focus = gameData.gameId === selectedGame ? true : false;
-  let status = "F";
-
   if (!gameData) return <Loading />;
+  
+  let focus = gameData.gameId === selectedGame ? true : false;
+  
+  let status = "FT";
+  dayjs.extend(customParseFormat);
+  if (!gameData.awayScore) status = dayjs(gameData.startTime, "HH:mm").format("h:mm A");
 
   if (liveScores?.[gameData.id_sdb_event]) {
     const { homeScore, awayScore, quarter, progress } =
@@ -30,14 +33,11 @@ const SingleGame = ({
         : quarter;
   }
 
-  let awayTeam = gameData.awayTeam.abbr || gameData.awayTeam;
-  let homeTeam = gameData.homeTeam.abbr || gameData.homeTeam;
-
   return (
     <Wrapper onClick={() => handleGameClick(gameData.gameId, index)}>
       <GameDiv focus={focus}>
         <Teams>
-          {TEAM[awayTeam]?.location} at {TEAM[homeTeam]?.location}
+          {TEAM[gameData.awayTeam.abbr]?.location} at {TEAM[gameData.homeTeam.abbr]?.location}
         </Teams>
         <Score>
           {gameData.awayScore} - {gameData.homeScore}
