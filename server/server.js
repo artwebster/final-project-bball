@@ -5,7 +5,7 @@ const morgan = require("morgan");
 
 const PORT = process.env.PORT || 8000;
 
-const { getGames, getGames2, getNews, getOdds, getOddsNew, getStandings, getLiveScores } = require("./handlers");
+const { getGames, getNews, getOdds, getStandings, getLiveScores } = require("./handlers");
 const { createAccount, loginAccount, checkEmail, savePicks } = require("./handlers_FB");
 
 
@@ -28,13 +28,11 @@ express()
   .use("/", express.static(__dirname + "/"))
 
   // endpoints
-  .get("/api/get-games/:date", getGames)
   .get("/api/get-news-articles", getNews)
-  .get("/api/get-game-odds", getOdds)
   .get("/api/get-standings", getStandings)
 
-  .get("/api/get-game-odds-new", getOddsNew)
-  .get("/api/get-games2/:date", getGames2)
+  .get("/api/get-game-odds/:id", getOdds)
+  .get("/api/get-games/:date", getGames)
   .get("/api/get-live-scores", getLiveScores)
   
   .post("/api/login-account", loginAccount)

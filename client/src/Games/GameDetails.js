@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import GameStats from "./GameStats";
-import GameOdds from "./GameOdds";
-import DateBar from "./DateBar";
-import * as TEAM from "../data/constants"
-import { useParams } from "react-router-dom";
 import Loading from "../Loading";
 
 const GameDetails = ({gameInfo}) => {
-console.log("gaminefonaoksdfjlaskdjf", gameInfo.homeTeam.abbr);
-  const [detailsPage, setDetailsPage] = useState(true);
   const [gameDetails, setGameDetails] = useState(null);
 
   const getStats = () => {
@@ -29,8 +22,6 @@ console.log("gaminefonaoksdfjlaskdjf", gameInfo.homeTeam.abbr);
       })
     })
   }
-
-  // console.log("gameDetails", gameDetails);
 
   useEffect(() => {
     getStats();
@@ -103,13 +94,6 @@ const Wrapper = styled.div`
   width: 100%;
   flex-direction: column;
   align-items: center;
-  border: 1px solid red;
-`;
-
-const Header = styled.div`
-  display: flex;
-  /* width: 100%; */
-  justify-content: space-between;
   border: 1px solid red;
 `;
 
