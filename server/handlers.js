@@ -2,7 +2,7 @@
 
 const fetch = require("node-fetch");
 const dayjs = require('dayjs')
-const { db } = require("./config");
+const { db } = require("./firebase")
 const gameList = require("./data/games.json")
 const teams = require("./data/teams.json");
 
