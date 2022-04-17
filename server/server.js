@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 8000;
 const { getGames, getNews, getOdds, getStandings, getLiveScores } = require("./handlers");
 const { createAccount, loginAccount, checkEmail, savePicks } = require("./handlers_FB");
 
-
 express()
   .use(function (req, res, next) {
     res.header(

@@ -14,7 +14,7 @@ const Account = () => {
         history.push("/signin");
     }
 
-    console.log(userInfo);
+
     return (
         <Wrapper>
             <h1>Welcome, {userInfo.username}!</h1>

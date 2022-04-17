@@ -1,65 +1,68 @@
 "use strict";
 
 const fetch = require("node-fetch");
-const { v4: uuidv4 } = require("uuid");
-const { db, users } = require("./config");
+const { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, db } = require("./firebase")
 
 const loginAccount = async (req, res) => {
-  try {
-    const { email, password } = req.body
-  
-    const userSearch = await users.where("email", "==", email).where("password", "==", password).get();
-    
-    if (userSearch.empty) {
-      res.status(404).json({ status: 400, data: req.body, message: "No user found with that email and/or password" })
-      return;
-    }
-    
-    userSearch.forEach(doc => {
-      res.status(200).json({ status: 200, data: doc.data(), message: "Request successful" });
-    });
+    try {
+      const { email, password } = req.body
+      
+      const signIn = await signInWithEmailAndPassword(auth, email, password)
+      const token = await signIn.user.getIdToken();
 
-  } catch (err) {
-    res.status(500).json({ status: 500, data: req.body, message: err.message })
-  }
+      const userSearch = await db.collection("users").where("email", "==", email).get();
+      userSearch.forEach(doc => {
+        return res.status(200).json({ status: 200, data: doc.data(), token, message: "Sign in successful" });
+      });
+
+
+    } catch (err) {
+      if (err.code === "auth/wrong-password" || "auth/user-not-found") {
+        return res.status(400).json({ status: 400, message: "The email or password is incorrect"})
+      } else {
+        return res.status(500).json({ status: 500, message: err.message })
+      }
+    }
 }
 
 const createAccount = async (req, res) => {
   try {
-    let userInfo = req.body;
-    userInfo["id"] = uuidv4();
+    const { email, password, username } = req.body
+  
+    const userSearch = await db.collection("users").where("username", "==", username).get()
+    if (!userSearch.empty) {
+      return res.status(400).json({ status: 400, message: "Username already taken" })
+    } 
+    
+    const newUser = await createUserWithEmailAndPassword(auth, email, password)
+    const userId = newUser.user.uid;
+    const token = await newUser.user.getIdToken();
+     
+    const userDetails = { username, email, userId }
 
-    let checkStatus = null;
-    
-    let userSearch = await users.where("userName", "==", userInfo.username).get();
-    if (!userSearch.empty) checkStatus = "Username already in use";
-    
-    userSearch = await users.where("email", "==", userInfo.email).get();
-    if (!userSearch.empty) checkStatus = "Email address already in use";
-    
-    if (checkStatus) {
-      res.status(400).json({ status: 400, data: userInfo, message: checkStatus });
-    } else {
-      await users.doc(userInfo.id).set(userInfo);
-      res.status(200).json({ status: 200, data: userInfo, message: "Account created! Please wait while we redirect you" });
-    }
+    await db.collection("users").doc(userId).set(userDetails);
+      
+    return res.status(200).json({ status: 200, token, data: userDetails, message: "Account created! Please wait while we redirect you"})
   } catch (err) {
-    res.status(500).json({ status: 500, message: err.message });
+    if (err.code === 'auth/email-already-in-use') {
+      return res.status(400).json({ status: 400, message: "Email already in use"})
+    } else {
+      return res.status(500).json({ status: 500, message: "Server error" })
+    }
   }
-};
+}
 
 const checkEmail = async (req, res) => {
   try {
     const {email} = req.body;
 
-    const emailSearch = await users.where("email", "==", email).get()
+    const emailSearch = await db.collection("users").where("email", "==", email).get()
 
     if (emailSearch.empty) {
       res.status(404).json({ status: 404, data: email, message: "Email account not found" })
 
     } else {
       res.status(200).json({ status: 200, data: email, message: "An email has been sent with instructions on how to reset your password." });
-
     }
 
   } catch (err) {
@@ -73,14 +76,13 @@ const savePicks = async (req, res) => {
 
     const updateObj = { [userName]: picks}
 
-    const update = await users.doc(user).collection('picks').doc(date).set(picks, {merge: true});
+    const update = await db.collection("users").doc(user).collection('picks').doc(date).set(picks, {merge: true});
     // const update2 = await db.collection("games").doc(gameId).collection("data").doc("picks").set(updateObj, {merge: true})
 
     res.status(200).json({ status: 200, data: picks, message: "Picks updated"})
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message })
   }
-
 };
 
 module.exports = { createAccount, loginAccount, checkEmail, savePicks };

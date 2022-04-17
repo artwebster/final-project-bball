@@ -23,7 +23,7 @@ const Pickem = () => {
       fetch("/api/save-picks", {
         method: "PATCH",
         body: JSON.stringify({
-          user: userInfo.id, 
+          user: userInfo.userId, 
           date: date.format("YYYY-MM-DD"),
           userName: userInfo.username,
           picks, 
