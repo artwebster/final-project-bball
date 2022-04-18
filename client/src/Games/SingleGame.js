@@ -21,16 +21,26 @@ const SingleGame = ({
   let status = "FT";
   dayjs.extend(customParseFormat);
   if (!gameData.awayScore) status = dayjs(gameData.startTime, "HH:mm").format("h:mm A");
+  
+  // // thesportsdb livescores (getLiveScores endpoint)
+  // if (liveScores?.[gameData.id_sdb_event]) {
+  //   const { homeScore, awayScore, quarter, progress } =
+  //     liveScores[gameData.id_sdb_event];
+  //   gameData.awayScore = awayScore;
+  //   gameData.homeScore = homeScore;
+  //   status =
+  //     quarter.slice(0, 1) === "Q"
+  //       ? `${12 - Number(progress)}:00 - ${quarter}`
+  //       : quarter;
+  // }
 
-  if (liveScores?.[gameData.id_sdb_event]) {
-    const { homeScore, awayScore, quarter, progress } =
-      liveScores[gameData.id_sdb_event];
+  // balldontlie livescores (getLiveScores2 endpoint)
+  if (liveScores?.[gameData.gameId]) {
+    const { homeScore, awayScore, quarter, progress, gameStatus } =
+      liveScores[gameData.gameId];
     gameData.awayScore = awayScore;
     gameData.homeScore = homeScore;
-    status =
-      quarter.slice(0, 1) === "Q"
-        ? `${12 - Number(progress)}:00 - ${quarter}`
-        : quarter;
+    status = gameStatus === "Final" ? "FT" : `${progress} ${quarter}Q`;
   }
 
   return (
