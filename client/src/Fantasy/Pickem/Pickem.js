@@ -10,10 +10,12 @@ const Pickem = () => {
     const { games, date, odds, getOdds } = useContext(DataContext);
     const {userInfo} = useContext(AccountContext);
     const [picks, setPicks] = useState({})
+    const gameIdArray = [];
 
     useEffect(() => {
       if (!games) return;
       games.forEach((game) => {
+        gameIdArray.push(game.gameId);
         getOdds(game.gameId);
       })
     }, [games])
@@ -26,7 +28,8 @@ const Pickem = () => {
           user: userInfo.userId, 
           date: date.format("YYYY-MM-DD"),
           userName: userInfo.username,
-          picks, 
+          picks,
+          gameIds: games.map((game) => game.gameId), 
         }),
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +40,7 @@ const Pickem = () => {
       .catch(err => console.log("error:", err))
     };
 
-    if (!odds || odds.length < games.length) return <Loading />
+    if (!odds || !games || odds.length < games.length) return <Loading />
 
     return (
         <Wrapper>

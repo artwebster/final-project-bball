@@ -12,8 +12,15 @@ export const DataProvider = ({ children }) => {
   const [standings, setStandings] = useState(null);
   const [date, setDate] = useState(dayjs());
   const [liveScores, setLiveScores] = useState(null)
+  const [leaderboard, setLeaderboard] = useState(null)
 
   const today = date.format("YYYY-MM-DD");
+
+  const getLeaderboard = () => {
+    fetch("/api/get-leaderboard")
+      .then(res => res.json())
+      .then(data => setLeaderboard(data.data));
+  };
 
   const getNews = () => {
     fetch("/api/get-news-articles")
@@ -92,6 +99,7 @@ export const DataProvider = ({ children }) => {
         standings,
         date,
         liveScores,
+        leaderboard,
         setDate,
         setGameId,
         getNews,
@@ -99,6 +107,7 @@ export const DataProvider = ({ children }) => {
         getOdds,
         getGames,
         getGamesSched,
+        getLeaderboard,
       }}
     >
       {children}

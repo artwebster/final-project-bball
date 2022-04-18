@@ -30,13 +30,13 @@ const SingleGamePickem = ({ gameData, setPicks, picks, odds }) => {
         <input
           type="radio"
           name={gameData.gameId + "spread"}
-          value={`${awayTeam}${odds?.spreadAway}`}
+          value={`awayTeamScore${odds?.spreadAway}`}
         />
         {odds?.spreadAway}
         <input
           type="radio"
           name={gameData.gameId + "spread"}
-          value={`${homeTeam}${odds?.spreadHome}`}
+          value={`homeTeamScore${odds?.spreadHome}`}
         />
         {odds?.spreadHome}
       </SpreadDiv>

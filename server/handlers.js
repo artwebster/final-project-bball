@@ -12,15 +12,40 @@ const { GNEWS, X_API_KEY, SDIO_KEY, TSDB_KEY } = process.env;
 const getGames = async (req, res) => {
   try {
     const date = req.params.date;
-    const response = gameList.filter((game) => game.date === date)
+    let response = [];
+    if ((new Date(date)) > (new Date("2022-04-12"))) {
+      console.log("here");
+      const gameSearch = await db.collection("games").where("date", "==", date).get();
+
+      gameSearch.forEach(el => {
+        let game = el.data();
+        response.push({
+          awayTeam: {
+            fullName: game.awayTeam_fullName,
+            abbr: game.awayTeam
+          },
+          homeTeam: {
+            fullName: game.homeTeam_fullName,
+            abbr: game.homeTeam
+          },
+          startTime: game.status,
+          gameId: game.id,
+          awayScore: game.awayTeamScore,
+          homeScore: game.homeTeamScore,
+        })
+      })
+    } else {
+      response = gameList.filter((game) => game.date === date)
+    }
     
-  res.status(200).json({ status: 200, data: response, message: "Request successful"})
+    res.status(200).json({ status: 200, data: response, message: "Request successful"})
 
   } catch (err) {
     res.status(500).json({ status: 500, message: "Server error"})
   }
 }
 
+// main live scores API, updates every 2 min
 const getLiveScores = async (req, res) => {
   try {
     await fetch(`https://www.thesportsdb.com/api/v2/json/${TSDB_KEY}/livescore.php?l=4387`)
@@ -43,12 +68,38 @@ const getLiveScores = async (req, res) => {
   }
 }
 
+// backup live scores API, updates every 10 min but more reliable
+const getLiveScores2 = async (req, res) => {
+  try {
+    const date = dayjs().format("YYYY-MM-DD");
+    await fetch(`https://www.balldontlie.io/api/v1/games?dates[]=${date}`)
+    .then(res => res.json())
+    .then(data => {
+      let liveGames = {};
+      data.data.forEach((liveGame) => {
+        let homeAbbr = liveGame.home_team.abbreviation;
+        let awayAbbr = liveGame.visitor_team.abbreviation;
+        liveGames[`${date}&${awayAbbr}&${homeAbbr}`] = {
+          homeScore: liveGame.home_team_score,
+          awayScore: liveGame.visitor_team_score,
+          quarter: liveGame.period,
+          progress: liveGame.time,
+          gameStatus: liveGame.status,
+        }
+      });
+      res.status(200).json({ status: 200, data: liveGames, message: "Request successful"})
+    });
+
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message })
+  }
+}
+
 const getOdds = async (req, res) => {
     try {
       const gameId = req.params.id;
-      console.log("gameId?", gameId);
       const newDate = dayjs(gameId.slice(0,10));
-      
+      const homeTeam = gameId.slice(15,18)
       const time = Math.floor(newDate.unix());
       const endTime = time + 86400;
 
@@ -69,7 +120,7 @@ const getOdds = async (req, res) => {
         .then( res => res.json())
         .then((data) => {
               const oddsData = data.events.find((oddsGroup) => {
-              return (oddsGroup.home?.abbreviation === home)
+              return (oddsGroup.home?.abbreviation === homeTeam)
             })
            
             if (oddsData) {
@@ -122,4 +173,5 @@ module.exports = {
   getOdds,
   getStandings,
   getLiveScores,
+  getLiveScores2,
 };
