@@ -19,7 +19,8 @@ const News = () => {
       <Title onClick={()=> {
         setFocus(null)
         setReadingStatus(false)
-        }}>News</Title>
+        }}><h1>NEWS</h1></Title>
+        {/* <NewsItemsDiv> */}
       {newsItems.map((article, index) => (
           <NewsItem
             key={article.url}
@@ -32,15 +33,18 @@ const News = () => {
           />
         ))
        }
+       {/* </NewsItemsDiv> */}
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+`;
 
 const Title = styled.button`
-  font-size: 3rem;
-  font-weight: 700;
 `;
 
 export default News;

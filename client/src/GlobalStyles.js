@@ -77,12 +77,16 @@ code {
   --base-color: white;
   --inverse-base: black;
   --highlight-color: rgba(0, 204, 102, 0.5);
+  --orange: #f8510e;
 }
 
-/* 2 */
 [data-theme="dark"] {
   --font-color: #eee;
   --background-color: #202020;
+  --medium-size-step: #232A2A;
+  --large-size-step1: #222626;
+  --large-size-step2: #242D2D;
+  --inbetween-color: #263333;
   --secondary-color: #505050;
   --link-color: lightblue;
   --base-color: black;

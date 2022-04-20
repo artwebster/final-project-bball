@@ -54,7 +54,11 @@ export const DataProvider = ({ children }) => {
     console.log("getGames fired");
     fetch(`/api/get-games/${today}`)
     .then(res => res.json())
-    .then(data => setGames(data.data))
+    .then(data => {
+      const games = data.data;
+      const sortedGames = games.sort((a, b) => Number(a.startTime.slice(0,2)) - Number(b.startTime.slice(0,2)))
+      setGames(sortedGames)
+    })
   };
 
   const getLiveScores = () => {

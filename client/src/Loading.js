@@ -3,10 +3,12 @@ import { FaBasketballBall } from "react-icons/fa";
 
 const Loading = () => {
     return (
+      <Wrapper>
         <LoadingDiv>
           Loading...
           <FaBasketballBall className="icon" />
         </LoadingDiv>
+        </Wrapper>
       );
 };
 
@@ -17,6 +19,12 @@ const rotate = keyframes`
     to {
         transform: rotate(360deg);
     }
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const LoadingDiv = styled.div`

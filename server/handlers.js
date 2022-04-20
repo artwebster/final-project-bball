@@ -14,7 +14,6 @@ const getGames = async (req, res) => {
     const date = req.params.date;
     let response = [];
     if ((new Date(date)) > (new Date("2022-04-12"))) {
-      console.log("here");
       const gameSearch = await db.collection("games").where("date", "==", date).get();
 
       gameSearch.forEach(el => {
@@ -28,10 +27,16 @@ const getGames = async (req, res) => {
             fullName: game.homeTeam_fullName,
             abbr: game.homeTeam
           },
-          startTime: game.status,
+          startTime: game.startTime,
+          status: game.status,
           gameId: game.id,
           awayScore: game.awayTeamScore,
           homeScore: game.homeTeamScore,
+          date: game.date,
+          id_sdb_event: game.id_sdb_event,
+          ytLink: game.ytLink,
+          ytThumb: game.ytThumb,
+          ytDesc: game.ytDesc,
         })
       })
     } else {
@@ -48,6 +53,7 @@ const getGames = async (req, res) => {
 // main live scores API, updates every 2 min
 const getLiveScores = async (req, res) => {
   try {
+    console.log("getLiveScores1 fired");
     await fetch(`https://www.thesportsdb.com/api/v2/json/${TSDB_KEY}/livescore.php?l=4387`)
     .then(res => res.json())
     .then(data => {
