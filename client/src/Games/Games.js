@@ -7,29 +7,56 @@ import Loading from "../Loading";
 import DateBar from "./DateBar";
 import GameDetails from "./GameDetails";
 import { useLocation } from "react-router-dom";
+import { AccountContext } from "../Hooks/AccountContext";
 
 const Games = () => {
   const { games, gameId, setGameId, date } = useContext(DataContext);
-  const [currentGame, setCurrentGame] = useState(null)
+  const { screenSize } = useContext(AccountContext);
+  const [playerStats, setPlayerStats] = useState(null);
+  const [currentGame, setCurrentGame] = useState(null);
+  const [topPlayers, setTopPlayers] = useState(null);
   const location = useLocation();
-  
+
   // closing any "open" game details page if clicking on the app logo
-  useEffect(()=> {
+  useEffect(() => {
     setCurrentGame(null);
-  },[location.state])
-  
+  }, [location.state]);
 
-//   const [serverError, setServerError] = useState(false)
-// useEffect(() => {
-//   console.log("USE EFFECT ONE FIRE");
-//   if (!games) var error = setTimeout(() => setServerError(true), 3000)
-//   return clearTimeout(error); 
-//   },[games])
-  
-// console.log("serverError::", serverError);
-//   if (serverError) return <div style={{padding: "4rem"}}>Could not connect to server, please check your internet connection and try again.</div>
+  const fetchStats = (index) => {
+    console.log("fetch stats fetched");
+    let targetGame = games[index];
 
-  if (!games) return <Loading />
+    fetch(
+      `https://www.balldontlie.io/api/v1/games?start_date=${targetGame.date}&end_date=${targetGame.date}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        let bdl_game = data.data.find(
+          (game) => game.home_team.abbreviation === targetGame.homeTeam.abbr
+        );
+
+        fetch(
+          `https://www.balldontlie.io/api/v1/stats?game_ids[]=${bdl_game.id}`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            let teamA = data.data.filter(
+              (player) => player.team.abbreviation === targetGame.homeTeam.abbr
+            );
+            let teamB = data.data.filter(
+              (player) => player.team.abbreviation === targetGame.awayTeam.abbr
+            );
+            let topPlayerA = teamA.sort((a, b) => b.pts - a.pts);
+            let topPlayerB = teamB.sort((a, b) => b.pts - a.pts);
+            setPlayerStats({ teamA, teamB });
+            console.log("topPlayerA", topPlayerA);
+            console.log("topPlayerB", topPlayerB);
+            setTopPlayers([topPlayerA[0], topPlayerB[0]]);
+          });
+      });
+  };
+
+  if (!games) return <Loading />;
 
   // when a game is clicked, putting that game's id into state to render the details
   const handleGameClick = (gameid, index) => {
@@ -38,28 +65,34 @@ const Games = () => {
       setCurrentGame([games[index]]);
     } else if (gameId === null && currentGame) {
       setGameId(null);
-      setCurrentGame(null)
-    } else setGameId(gameid);
+      setCurrentGame(null);
+    } else {
+      setGameId(gameid);
+      fetchStats(index);
+    }
   };
 
   return (
-    <Wrapper>
-      <DateBar setCurrentGame={setCurrentGame} />
+    <Wrapper className={screenSize}>
+      <DateBar source={"games"} setCurrentGame={setCurrentGame} />
       <GameContainer>
-          {(currentGame || games).map((game, index) => {
-            return (
-              <SingleGame 
-                handleGameClick={handleGameClick}
-                gameData={game}
-                index={index}
-                key={game.gameId}
-                selectedGame={gameId}
-                date={date}
-                setCurrentGame={setCurrentGame}
-              />
-            );
-          })}
-      {(currentGame) && <GameDetails gameInfo={currentGame[0]}/>}
+        {(currentGame || games).map((game, index) => {
+          return (
+            <SingleGame
+              handleGameClick={handleGameClick}
+              gameData={game}
+              index={index}
+              key={game.gameId}
+              selectedGame={gameId}
+              date={date}
+              setCurrentGame={setCurrentGame}
+              topPlayers={topPlayers}
+            />
+          );
+        })}
+        {currentGame && (
+          <GameDetails gameInfo={currentGame[0]} playerStats={playerStats} />
+        )}
       </GameContainer>
     </Wrapper>
   );
@@ -67,21 +100,20 @@ const Games = () => {
 
 const Wrapper = styled.div`
   display: flex;
-  /* width: 900px; */
-  /* max-width: 600px; */
   flex-direction: column;
   align-items: center;
   padding: 0 1rem;
-  /* border: 1px solid red; */
+  .large {
+    margin: 0;
+    padding: 0;
+  }
 `;
 
 const GameContainer = styled.div`
   display: flex;
   width: 100%;
   max-width: 600px;
-  /* border:1px solid blue; */
   flex-direction: column;
-  /* align-items: center; */
   justify-content: flex-start;
 `;
 

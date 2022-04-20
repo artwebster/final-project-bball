@@ -3,7 +3,7 @@ import styled from "styled-components";
 import GameHighlights from "./GameHighlights";
 import GameStats from "./GameStats";
 
-const GameDetails = ({ gameInfo }) => {
+const GameDetails = ({ gameInfo, playerStats }) => {
   const [gameDetails, setGameDetails] = useState("stats");
 
   const handleClick = (ev) => {
@@ -13,11 +13,25 @@ const GameDetails = ({ gameInfo }) => {
   return (
     <Wrapper>
       <TopBar on>
-        <Button value={"stats"} className={(gameDetails === "stats") && "active"} onClick={(ev) => handleClick(ev)}>GAME STATS</Button>
-        <Button value={"highlights"} className={(gameDetails === "highlights") && "active"} onClick={(ev) => handleClick(ev)}>HIGHLIGHTS</Button>
+        <Button
+          value={"stats"}
+          className={gameDetails === "stats" && "active"}
+          onClick={(ev) => handleClick(ev)}
+        >
+          GAME STATS
+        </Button>
+        <Button
+          value={"highlights"}
+          className={gameDetails === "highlights" && "active"}
+          onClick={(ev) => handleClick(ev)}
+        >
+          HIGHLIGHTS
+        </Button>
       </TopBar>
       <MainDiv>
-        {gameDetails === "stats" && <GameStats gameInfo={gameInfo} />}
+        {gameDetails === "stats" && (
+          <GameStats playerStats={playerStats} gameInfo={gameInfo} />
+        )}
         {gameDetails === "highlights" && <GameHighlights gameInfo={gameInfo} />}
       </MainDiv>
     </Wrapper>
@@ -25,7 +39,7 @@ const GameDetails = ({ gameInfo }) => {
 };
 
 const Wrapper = styled.div`
-width: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 `;
@@ -39,6 +53,8 @@ const TopBar = styled.div`
   width: 100%;
   .active {
     background-color: var(--orange);
+    border-radius: 5px 5px 0 0;
+    color: #eee;
   }
 `;
 

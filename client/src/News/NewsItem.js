@@ -9,10 +9,6 @@ const NewsItem = ({
   setReadingStatus,
   index,
 }) => {
-  console.log("articleionfor???", articleInfo);
-
-  // if articleIn
-
   const pubTime = dayjs(articleInfo.publishedAt).format("h:mm A, ddd MMM D");
 
   const handleClick = () => {
@@ -37,10 +33,10 @@ const NewsItem = ({
         </>
       )}
       {readingStatus && (
-          <>
-      <p>{articleInfo.content}</p>
-      <a href={articleInfo.url}>Read full article...</a>
-      </>
+        <>
+          <p>{articleInfo.content}</p>
+          <a href={articleInfo.url}>Read full article...</a>
+        </>
       )}
     </Wrapper>
   );
@@ -52,13 +48,13 @@ const Wrapper = styled.button`
   background-color: var(--inbetween-color);
   border-radius: 4px;
   > a {
-      margin: 4px;
+    margin: 4px;
   }
 `;
 
 const PublishTime = styled.div`
   font-size: 0.8rem;
-  background-color: var(--orange);
+  background-color: var(--news-top);
   border-radius: 4px 4px 0 0;
 `;
 

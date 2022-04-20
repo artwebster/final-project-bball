@@ -3,7 +3,6 @@ import GlobalStyles from "./GlobalStyles";
 import styled from "styled-components";
 
 import Header from "./Header/Header";
-import Games from "./Games/Games";
 import News from "./News/News";
 import Schedule from "./Schedule/Schedule";
 import Standings from "./Standings/Standings";
@@ -11,16 +10,9 @@ import SignIn from "./SignIn/SignIn";
 import Account from "./Account/Account";
 import Fantasy from "./Fantasy/Fantasy";
 import Pickem from "./Fantasy/Pickem/Pickem";
-import { useContext } from "react";
-import { AccountContext } from "./Hooks/AccountContext";
-import BatchImp from "./batchImp";
+import Home from "./Home/Home";
 
 const App = () => {
-
-const { size } = useContext(AccountContext)
-console.log("mobile size???", size);
-
-
   return (
     <PageWrapper>
       <BrowserRouter>
@@ -49,11 +41,8 @@ console.log("mobile size???", size);
             <Route exact path="/account">
               <Account />
             </Route>
-            <Route exact path="/batchimp">
-              <BatchImp />
-            </Route>
             <Route path="/">
-              <Games />
+              <Home />
             </Route>
           </Switch>
         </Container>
@@ -72,10 +61,6 @@ const PageWrapper = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-  /* width: 35rem; */
-  /* height: 50rem; */
-  /* border: 1px solid red; */
 `;
 
 export default App;

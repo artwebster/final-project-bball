@@ -4,7 +4,7 @@ import { DataContext } from "../Hooks/DataContext";
 import { useHistory } from "react-router-dom";
 import { AccountContext } from "../Hooks/AccountContext";
 
-const DateBar = ({ setCurrentGame }) => {
+const DateBar = ({ setCurrentGame, setPicks, setCheck, source }) => {
   const { date, setDate } = useContext(DataContext);
   const { screenSize } = useContext(AccountContext);
   const history = useHistory();
@@ -12,7 +12,7 @@ const DateBar = ({ setCurrentGame }) => {
   let yyYesterday = date.add(-3, "day");
   let yYesterday = date.add(-2, "day");
   let yesterday = date.add(-1, "day");
-  
+
   let tomorrow = date.add(1, "day");
   let tTomorrow = date.add(2, "day");
   let ttTomorrow = date.add(3, "day");
@@ -20,25 +20,42 @@ const DateBar = ({ setCurrentGame }) => {
   // setting the background of the dates, based on how many dates are rendered
   let yyBG, yBG, tBG, ttBG;
   if (screenSize === "large") {
-    yyBG = "linear-gradient(to left, var(--large-size-step2), var(--large-size-step1))";
-    yBG = "linear-gradient(to left, var(--inbetween-color), var(--large-size-step2))";
-    tBG = "linear-gradient(to right, var(--inbetween-color), var(--large-size-step2))";
-    ttBG = "linear-gradient(to right, var(--large-size-step2), var(--large-size-step1))";
+    yyBG =
+      "linear-gradient(to left, var(--large-size-step2), var(--large-size-step1))";
+    yBG =
+      "linear-gradient(to left, var(--inbetween-color), var(--large-size-step2))";
+    tBG =
+      "linear-gradient(to right, var(--inbetween-color), var(--large-size-step2))";
+    ttBG =
+      "linear-gradient(to right, var(--large-size-step2), var(--large-size-step1))";
   }
   if (screenSize === "medium") {
-    yyBG = "linear-gradient(to left, var(--medium-size-step), var(--background-color))";
-    yBG = "linear-gradient(to left, var(--inbetween-color), var(--medium-size-step))";
-    tBG = "linear-gradient(to right, var(--inbetween-color), var(--medium-size-step))";
-    ttBG = "linear-gradient(to right, var(--medium-size-step), var(--background-color))";
+    yyBG =
+      "linear-gradient(to left, var(--medium-size-step), var(--background-color))";
+    yBG =
+      "linear-gradient(to left, var(--inbetween-color), var(--medium-size-step))";
+    tBG =
+      "linear-gradient(to right, var(--inbetween-color), var(--medium-size-step))";
+    ttBG =
+      "linear-gradient(to right, var(--medium-size-step), var(--background-color))";
   }
   if (screenSize === "small") {
-    yBG = "linear-gradient(to left, var(--inbetween-color), var(--background-color))";
-    tBG = "linear-gradient(to right, var(--inbetween-color), var(--background-color))";
+    yBG =
+      "linear-gradient(to left, var(--inbetween-color), var(--background-color))";
+    tBG =
+      "linear-gradient(to right, var(--inbetween-color), var(--background-color))";
   }
 
   // changing the "current" date based on what the user clicks
   const handleDateClick = (val) => {
     setDate(date.add(val, "day"));
+
+    if (source === "pickem") {
+      setPicks({});
+      setCheck(false);
+      return;
+    }
+
     setCurrentGame(null);
     history.push("/");
   };
@@ -46,18 +63,23 @@ const DateBar = ({ setCurrentGame }) => {
   return (
     <Wrapper>
       {screenSize === "large" && (
-        <Date onClick={() => handleDateClick(-3)} style={{background: `linear-gradient(to left, var(--large-size-step1), var(--background-color))`}}>
+        <Date
+          onClick={() => handleDateClick(-3)}
+          style={{
+            background: `linear-gradient(to left, var(--large-size-step1), var(--background-color))`,
+          }}
+        >
           <span>{yyYesterday.format("ddd").toUpperCase()}</span>
           <span>{yyYesterday.format("MMM D")}</span>
         </Date>
       )}
       {(screenSize === "medium" || screenSize === "large") && (
-        <Date onClick={() => handleDateClick(-2)} style={{background: yyBG}}>
+        <Date onClick={() => handleDateClick(-2)} style={{ background: yyBG }}>
           <span>{yYesterday.format("ddd").toUpperCase()}</span>
           <span>{yYesterday.format("MMM D")}</span>
         </Date>
       )}
-      <Date onClick={() => handleDateClick(-1)} style={{background: yBG}}>
+      <Date onClick={() => handleDateClick(-1)} style={{ background: yBG }}>
         <span>{yesterday.format("ddd").toUpperCase()}</span>
         <span>{yesterday.format("MMM D")}</span>
       </Date>
@@ -67,18 +89,24 @@ const DateBar = ({ setCurrentGame }) => {
         <span>{date.format("MMM D")}</span>
       </MiddleDate>
 
-      <Date onClick={() => handleDateClick(1)} style={{background: tBG}}>
+      <Date onClick={() => handleDateClick(1)} style={{ background: tBG }}>
         <span>{tomorrow.format("ddd").toUpperCase()}</span>
         <span>{tomorrow.format("MMM D")}</span>
       </Date>
       {(screenSize === "medium" || screenSize === "large") && (
-        <Date onClick={() => handleDateClick(2)} style={{background: ttBG}}>
+        <Date onClick={() => handleDateClick(2)} style={{ background: ttBG }}>
           <span>{tTomorrow.format("ddd").toUpperCase()}</span>
           <span>{tTomorrow.format("MMM D")}</span>
         </Date>
       )}
       {screenSize === "large" && (
-        <Date onClick={() => handleDateClick(3)} style={{background: "linear-gradient(to right, var(--large-size-step1), var(--background-color))"}}>
+        <Date
+          onClick={() => handleDateClick(3)}
+          style={{
+            background:
+              "linear-gradient(to right, var(--large-size-step1), var(--background-color))",
+          }}
+        >
           <span>{ttTomorrow.format("ddd").toUpperCase()}</span>
           <span>{ttTomorrow.format("MMM D")}</span>
         </Date>
@@ -119,11 +147,7 @@ const Date = styled.button`
 const MiddleDate = styled(Date)`
   background-color: var(--inbetween-color);
   border: 1px solid var(--secondary-color);
-  box-shadow: 0px 0px 21px 10px rgba(0,0,0,0.3);
-  /* box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
-  /* box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; */
+  box-shadow: var(--box-shadow);
   width: 5rem;
   z-index: 2;
 `;

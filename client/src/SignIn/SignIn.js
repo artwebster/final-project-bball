@@ -11,17 +11,24 @@ const SignIn = () => {
   return (
     <PageWrapper>
       <ContentWrapper>
-        {(pageDisplay === "signin") && <SignInBox setPageDisplay={setPageDisplay} />}
-        {(pageDisplay === "signup") && <SignUpBox setPageDisplay={setPageDisplay} />}
-        {(pageDisplay === "password") && <ForgotPasswordBox setPageDisplay={setPageDisplay} />}
-        {(pageDisplay.message) && <Message setPageDisplay={setPageDisplay} pageDisplay={pageDisplay} />}
+        {pageDisplay === "signin" && (
+          <SignInBox setPageDisplay={setPageDisplay} />
+        )}
+        {pageDisplay === "signup" && (
+          <SignUpBox setPageDisplay={setPageDisplay} />
+        )}
+        {pageDisplay === "password" && (
+          <ForgotPasswordBox setPageDisplay={setPageDisplay} />
+        )}
+        {pageDisplay.message && (
+          <Message setPageDisplay={setPageDisplay} pageDisplay={pageDisplay} />
+        )}
       </ContentWrapper>
     </PageWrapper>
   );
 };
 
 const PageWrapper = styled.div`
-  width: 100vw;
   display: flex;
   justify-content: center;
 `;
@@ -32,12 +39,11 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: gray;
-  margin-top: 4rem;
+  background-color: var(--secondary-color);
+  margin: 4rem 0.5rem;
   padding: 3.5rem;
   width: 30rem;
   height: 27rem;
-  background-color: gray;
   border-radius: 0.6rem;
   z-index: 1;
 `;

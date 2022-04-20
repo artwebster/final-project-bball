@@ -1,10 +1,12 @@
 import { useState, useContext } from "react";
 import styled from "styled-components";
+import { AccountContext } from "../Hooks/AccountContext";
 import { DataContext } from "../Hooks/DataContext";
 import Loading from "../Loading";
 
 const Standings = () => {
-  const { standings, getStandings } = useContext(DataContext)
+  const { standings, getStandings } = useContext(DataContext);
+  const { screenSize } = useContext(AccountContext);
   const [sortMode, setSortMode] = useState("ConferenceRank");
 
   if (!standings) {
@@ -16,7 +18,7 @@ const Standings = () => {
     setSortMode(ev.target.value);
   };
 
-  if (!standings) return <Loading />
+  if (!standings) return <Loading />;
 
   let standingsArr = [];
   if (sortMode === "LeagueRank") standingsArr = [[...standings]];
@@ -39,11 +41,11 @@ const Standings = () => {
     <Wrapper>
       <Container>
         <Header>
-          <h1>Standings</h1>
+          <h1>STANDINGS</h1>
           <DisplaySelect onClick={handleClick}>
-            <Selection value={"DivisionRank"}>Division</Selection>
-            <Selection value={"ConferenceRank"}>Conference</Selection>
-            <Selection value={"LeagueRank"}>League</Selection>
+            <Selection value={"DivisionRank"}>DIVISION</Selection>
+            <Selection value={"ConferenceRank"}>CONFERENCE</Selection>
+            <Selection value={"LeagueRank"}>LEAGUE</Selection>
           </DisplaySelect>
         </Header>
         <TableDiv>
@@ -51,7 +53,7 @@ const Standings = () => {
             return (
               <Table key={index}>
                 <thead>
-                  <tr>
+                  <tr style={{ background: "var(--news-top)" }}>
                     <th></th>
                     <th>
                       {sortMode === "ConferenceRank" && grouping[0].Conference}
@@ -59,10 +61,14 @@ const Standings = () => {
                     </th>
                     <th>W</th>
                     <th>L</th>
-                    <th>Win%</th>
+                    <th style={{ textAlign: "center" }}>Win%</th>
                     <th>GB</th>
-                    <th>L10</th>
-                    <th>Stk</th>
+                    {screenSize !== "small" && (
+                      <>
+                        <th>L10</th>
+                        <th>Stk</th>
+                      </>
+                    )}
                   </tr>
                 </thead>
                 {grouping
@@ -77,12 +83,18 @@ const Standings = () => {
                           </td>
                           <td>{team.Wins}</td>
                           <td>{team.Losses}</td>
-                          <td>{team.Percentage}</td>
-                          <td className={"gb"}>{team.GamesBack}</td>
-                          <td>
-                            {team.LastTenWins}-{team.LastTenLosses}
+                          <td style={{ textAlign: "center" }}>
+                            {team.Percentage}
                           </td>
-                          <td>{team.StreakDescription}</td>
+                          <td className={"gb"}>{team.GamesBack}</td>
+                          {screenSize !== "small" && (
+                            <>
+                              <td>
+                                {team.LastTenWins}-{team.LastTenLosses}
+                              </td>
+                              <td>{team.StreakDescription}</td>
+                            </>
+                          )}
                         </tr>
                       </tbody>
                     );
@@ -97,11 +109,18 @@ const Standings = () => {
 };
 
 const Wrapper = styled.div`
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
 `;
 
 const Container = styled.div`
-  width: 35rem;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 `;
 
 const Header = styled.div`
@@ -111,10 +130,15 @@ const Header = styled.div`
   align-items: center;
 `;
 
-const DisplaySelect = styled.div``;
+const DisplaySelect = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 1rem 0;
+`;
 
 const Selection = styled.button`
-  width: 6rem;
+  width: 33%;
   &:hover {
     background-color: var(--secondary-color);
   }

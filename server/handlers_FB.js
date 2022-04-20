@@ -27,14 +27,12 @@ const loginAccount = async (req, res) => {
       .where("email", "==", email)
       .get();
     userSearch.forEach((doc) => {
-      return res
-        .status(200)
-        .json({
-          status: 200,
-          data: doc.data(),
-          token,
-          message: "Sign in successful",
-        });
+      return res.status(200).json({
+        status: 200,
+        data: doc.data(),
+        token,
+        message: "Sign in successful",
+      });
     });
   } catch (err) {
     if (err.code === "auth/wrong-password" || "auth/user-not-found") {
@@ -69,14 +67,12 @@ const createAccount = async (req, res) => {
 
     await db.collection("users").doc(userId).set(userDetails);
 
-    return res
-      .status(200)
-      .json({
-        status: 200,
-        token,
-        data: userDetails,
-        message: "Account created! Please wait while we redirect you",
-      });
+    return res.status(200).json({
+      status: 200,
+      token,
+      data: userDetails,
+      message: "Account created! Please wait while we redirect you",
+    });
   } catch (err) {
     if (err.code === "auth/email-already-in-use") {
       return res
@@ -102,14 +98,12 @@ const checkEmail = async (req, res) => {
         .status(404)
         .json({ status: 404, data: email, message: "Email account not found" });
     } else {
-      res
-        .status(200)
-        .json({
-          status: 200,
-          data: email,
-          message:
-            "An email has been sent with instructions on how to reset your password.",
-        });
+      res.status(200).json({
+        status: 200,
+        data: email,
+        message:
+          "An email has been sent with instructions on how to reset your password.",
+      });
     }
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -142,7 +136,10 @@ const savePicks = async (req, res) => {
 
 const getLeaderboard = async (req, res) => {
   try {
+    const yesterday = dayjs().add(-1, "day").format("YYYY-MM-DD");
     let scoreBoard = {};
+    let scoreBoardY = {};
+    console.log("yesterday", yesterday);
 
     // getting a list of all completed games from the database
     const gameResults = await db.collection("games").get();
@@ -168,6 +165,8 @@ const getLeaderboard = async (req, res) => {
       } else if (Number(ouTarget) < game.awayTeamScore + game.homeTeamScore)
         tally += 1;
       scoreBoard[user] = (await scoreBoard[user]) + tally || tally;
+      if (game.date === yesterday)
+        scoreBoardY[user] = (await scoreBoardY[user]) + tally || tally;
     };
 
     // looping through all the games and sending the completed ones to the calcPoints function
@@ -191,7 +190,11 @@ const getLeaderboard = async (req, res) => {
 
     res
       .status(200)
-      .json({ status: 200, data: scoreBoard, message: "Request successful" });
+      .json({
+        status: 200,
+        data: { scoreBoard, scoreBoardY },
+        message: "Request successful",
+      });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
   }
@@ -199,18 +202,20 @@ const getLeaderboard = async (req, res) => {
 
 const getYoutubeLink = async (homeTeam, date) => {
   const start = `${date}T15:00:00-05:00`;
-  const end = `${dayjs(date).add(1, "day").format("YYYY-MM-DD")}T03:00:00-05:00`;
+  const end = `${dayjs(date)
+    .add(1, "day")
+    .format("YYYY-MM-DD")}T03:00:00-05:00`;
 
   const youtubeSearch = await fetch(
     `https://www.googleapis.com/youtube/v3/search?part=snippet&key=${YOUTUBE_API_KEY}&type=video&q=${homeTeam}&channelId=UCLd4dSmXdrJykO_hgOzbfPw&publishedAfter=${start}&publishedBefore=${end}`
-  )
+  );
 
   const youtubeResults = await youtubeSearch.json();
   const ytObj = {
     ytLink: youtubeResults.items[0]?.id?.videoId,
-      ytThumb: youtubeResults.items[0]?.snippet?.thumbnails.high.url,
-      ytDesc: youtubeResults.items[0]?.snippet?.description,
-  }
+    ytThumb: youtubeResults.items[0]?.snippet?.thumbnails.high.url,
+    ytDesc: youtubeResults.items[0]?.snippet?.description,
+  };
 
   return ytObj;
 };
@@ -227,7 +232,7 @@ const forceUpdate = async (req, res) => {
 
     games.data.map(async (game) => {
       // calling the youtube API to get the highlight video info
-      // const youtube = await getYoutubeLink(game.home_team.name, date)
+      const youtube = await getYoutubeLink(game.home_team.name, date);
 
       // appending the updated game and highlight info onto the game's db entry
       db.collection("games")
