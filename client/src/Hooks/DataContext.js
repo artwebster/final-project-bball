@@ -11,15 +11,19 @@ export const DataProvider = ({ children }) => {
   const [newsItems, setNewsItems] = useState(null);
   const [standings, setStandings] = useState(null);
   const [date, setDate] = useState(dayjs());
-  const [liveScores, setLiveScores] = useState(null)
-  const [leaderboard, setLeaderboard] = useState(null)
+  const [liveScores, setLiveScores] = useState(null);
+  const [leaderboard, setLeaderboard] = useState(null);
+  const [leaderboardY, setLeaderboardY] = useState(null);
 
   const today = date.format("YYYY-MM-DD");
 
   const getLeaderboard = () => {
     fetch("/api/get-leaderboard")
-      .then(res => res.json())
-      .then(data => setLeaderboard(data.data));
+      .then((res) => res.json())
+      .then((data) => {
+        setLeaderboard(data.data.scoreBoard);
+        setLeaderboardY(data.data.scoreBoardY);
+      });
   };
 
   const getNews = () => {
@@ -38,9 +42,7 @@ export const DataProvider = ({ children }) => {
 
   const getOdds = (gameId) => {
     console.log("getOdds fired");
-    fetch(
-      `/api/get-game-odds/${gameId}`
-    )
+    fetch(`/api/get-game-odds/${gameId}`)
       .then((res) => res.json())
       .then((data) => {
         setOdds((state) => ({
@@ -53,27 +55,33 @@ export const DataProvider = ({ children }) => {
   const getGames = () => {
     console.log("getGames fired");
     fetch(`/api/get-games/${today}`)
-    .then(res => res.json())
-    .then(data => {
-      const games = data.data;
-      const sortedGames = games.sort((a, b) => Number(a.startTime.slice(0,2)) - Number(b.startTime.slice(0,2)))
-      setGames(sortedGames)
-    })
+      .then((res) => res.json())
+      .then((data) => {
+        const games = data.data;
+        const sortedGames = games.sort(
+          (a, b) =>
+            Number(a.startTime.slice(0, 2)) - Number(b.startTime.slice(0, 2))
+        );
+        setGames(sortedGames);
+      });
   };
 
   const getLiveScores = () => {
     if (today !== dayjs().format("YYYY-MM-DD")) return;
     console.log("getLiveScores fired");
     fetch("/api/get-live-scores")
-    .then(res => res.json())
-    .then(data => setLiveScores(data.data))
-  }
+      .then((res) => res.json())
+      .then((data) => setLiveScores(data.data));
+  };
 
   const getGamesSched = (date) => {
     console.log("getGamesSched fired");
     const start = date.format("YYYY-MM-DD");
     const end = date.add(7, "day").format("YYYY-MM-DD");
-    fetch(`https://www.balldontlie.io/api/v1/games?per_page=100&start_date=${start}&end_date=${end}`)
+
+    fetch(
+      `https://www.balldontlie.io/api/v1/games?per_page=100&start_date=${start}&end_date=${end}`
+    )
       .then((res) => res.json())
       .then((data) => {
         let newArr = [];
@@ -104,6 +112,7 @@ export const DataProvider = ({ children }) => {
         date,
         liveScores,
         leaderboard,
+        leaderboardY,
         setDate,
         setGameId,
         getNews,

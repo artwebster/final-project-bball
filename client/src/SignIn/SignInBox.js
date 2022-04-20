@@ -3,8 +3,8 @@ import { useHistory } from "react-router-dom";
 import { useContext } from "react";
 import { AccountContext } from "../Hooks/AccountContext";
 
-const SignInBox = ({setPageDisplay}) => {
-  const {setUserInfo} = useContext(AccountContext);
+const SignInBox = ({ setPageDisplay }) => {
+  const { setUserInfo } = useContext(AccountContext);
   const history = useHistory();
 
   const handleSubmit = (ev) => {
@@ -13,19 +13,24 @@ const SignInBox = ({setPageDisplay}) => {
     let password = ev.target[1].value;
     fetch("/api/login-account", {
       method: "POST",
-      body: JSON.stringify({email, password}),
+      body: JSON.stringify({ email, password }),
       headers: {
         "Content-Type": "application/json",
       },
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === 200) {
-        setUserInfo(data.data)
-        history.push("/account")
-      } else setPageDisplay({ message: data.message, status: data.status, ref: "signin" })
-    })
-    .catch(err => console.log("500 server error", err));
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 200) {
+          setUserInfo(data.data);
+          history.push("/account");
+        } else
+          setPageDisplay({
+            message: data.message,
+            status: data.status,
+            ref: "signin",
+          });
+      })
+      .catch((err) => console.log("500 server error", err));
   };
 
   return (
@@ -71,7 +76,6 @@ const Form = styled.form`
 const Input = styled.input`
   font-size: 16px;
   opacity: 0.5;
-  /* width: 250px; */
 `;
 
 const LoginButton = styled.button`
@@ -89,14 +93,13 @@ const LoginButton = styled.button`
   &:hover {
     background: slateblue;
   }
-  `;
+`;
 
 const Line = styled.div`
-    margin: 10px 0;
-    height: 0;
-    /* width: 320px; */
-    border-bottom: 1px solid white;
-  `;
+  margin: 10px 0;
+  height: 0;
+  border-bottom: 1px solid white;
+`;
 
 const SignUpLine = styled.div`
   margin: 10px 0;
@@ -117,13 +120,13 @@ const SignUpLine = styled.div`
 `;
 
 const ForgotPassword = styled.button`
-   font-size: 14px;
-    font-weight: 700;
-    color: white;
-    /* outline: none; */
-    background: none;
-    border: none;
-    cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  /* outline: none; */
+  background: none;
+  border: none;
+  cursor: pointer;
 `;
 
 export default SignInBox;

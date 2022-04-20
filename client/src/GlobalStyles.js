@@ -72,12 +72,18 @@ code {
 :root {
   --font-color: #202020;
   --background-color: #eee;
+  --medium-size-step: #E8E8E8;
+  --large-size-step1: #EAEAEA;
+  --large-size-step2: #E5E5E5;
+  --inbetween-color: #E1E1E1;
   --secondary-color: #d3d3d3;
   --link-color: cornflowerblue;
   --base-color: white;
   --inverse-base: black;
+  --news-top: #3285ef;  
   --highlight-color: rgba(0, 204, 102, 0.5);
   --orange: #f8510e;
+  --box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 [data-theme="dark"] {
@@ -91,7 +97,9 @@ code {
   --link-color: lightblue;
   --base-color: black;
   --inverse-base: white;
+  --news-top: rgba(12, 35, 64, 1);
   --highlight-color: rgba(0, 204, 102, 0.5);
+  --box-shadow: 0px 0px 21px 10px rgba(0, 0, 0, 0.3);
 }
 
 body {
@@ -106,6 +114,10 @@ a {
 p, h1, h2, h3, h4, h5, h6, button {
   color: var(--font-color)
 }
+
+h1 {
+  font-weight: 300;
+} 
 
 button {
   border: none;

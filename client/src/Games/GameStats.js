@@ -1,90 +1,73 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Loading from "../Loading";
 import * as TEAM from "../data/constants";
 
-const GameStats = ({gameInfo}) => {
-  const [gameDetails, setGameDetails] = useState(null);
-
-  const getStats = () => {
-    console.log("fetching stats");
-    fetch(`https://www.balldontlie.io/api/v1/games?start_date=${gameInfo.date}&end_date=${gameInfo.date}`)
-    .then(res => res.json())
-    .then(data => {
-      let bdl_game = data.data.find((game) => game.home_team.abbreviation === gameInfo.homeTeam.abbr);
-      fetch(`https://www.balldontlie.io/api/v1/stats?game_ids[]=${bdl_game.id}`)
-      .then(res => res.json())
-      .then(data => {
-
-      let teamA = data.data.filter((player) => player.team.abbreviation === gameInfo.homeTeam.abbr)
-      let teamB = data.data.filter((player) => player.team.abbreviation === gameInfo.awayTeam.abbr)
-
-      setGameDetails({ teamA, teamB })
-      })
-    })
-  }
-
-  useEffect(() => {
-    getStats();
-  }, [gameInfo]);
-
-  if (!gameDetails) return <Loading />
+const GameStats = ({ gameInfo, playerStats }) => {
+  if (!playerStats) return <Loading />;
 
   return (
     <Wrapper>
       <Body>
-      <TeamName color={TEAM[gameInfo.awayTeam.abbr].color}>{gameInfo.awayTeam.fullName}</TeamName>
-      <Grid>
-        <div className="header">Name</div>
-        <div className="header">Min</div>
-        <div className="header">Pts</div>
-        <div className="header">Rbs</div>
-        <div className="header">Blks</div>
-        <div className="header">Stls</div>
-        <div className="header">Asts</div>
-        {gameDetails.teamB.map((player, index) => {
-          let rowStagger = index % 2 === 0 ? "even" : "odd";
-          return (
-            <>
-              <div className={rowStagger}>
-                {player.player.first_name} {player.player.last_name}
-              </div>
-              <div className={rowStagger}>{player.min}</div>
-              <div className={rowStagger} style={{padding: "0 5px"}}>{player.pts}</div>
-              <div className={rowStagger}>{player.reb}</div>
-              <div className={rowStagger}>{player.blk}</div>
-              <div className={rowStagger}>{player.stl}</div>
-              <div className={rowStagger}>{player.ast}</div>
-            </>
-          );
-        })}
-        </Grid>
-        <TeamName color={TEAM[gameInfo.homeTeam.abbr].color}>{gameInfo.homeTeam.fullName}</TeamName>
+        <TeamName color={TEAM[gameInfo.awayTeam.abbr].color}>
+          {gameInfo.awayTeam.fullName}
+        </TeamName>
         <Grid>
-        <div className="header">Name</div>
-        <div className="header">Min</div>
-        <div className="header">Pts</div>
-        <div className="header">Rbs</div>
-        <div className="header">Blks</div>
-        <div className="header">Stls</div>
-        <div className="header">Ast</div>
-        {gameDetails.teamA.map((player, index) => {
-          let rowStagger = index % 2 === 0 ? "even" : "odd";
-          return (
-            <>
-              <div className={rowStagger}>
-                {player.player.first_name} {player.player.last_name}
-              </div>
-              <div className={rowStagger}>{player.min}</div>
-              <div className={rowStagger} style={{padding: "0 5px"}}>{player.pts}</div>
-              <div className={rowStagger}>{player.reb}</div>
-              <div className={rowStagger}>{player.blk}</div>
-              <div className={rowStagger}>{player.stl}</div>
-              <div className={rowStagger}>{player.ast}</div>
-            </>
-          );
-        })}
-      </Grid>
+          <div className="header">Name</div>
+          <div className="header">Min</div>
+          <div className="header">Pts</div>
+          <div className="header">Rbs</div>
+          <div className="header">Blks</div>
+          <div className="header">Stls</div>
+          <div className="header">Asts</div>
+          {playerStats.teamB.map((player, index) => {
+            let rowStagger = index % 2 === 0 ? "even" : "odd";
+            return (
+              <>
+                <div className={rowStagger}>
+                  {player.player.first_name} {player.player.last_name}
+                </div>
+                <div className={rowStagger}>{player.min}</div>
+                <div className={rowStagger} style={{ padding: "0 5px" }}>
+                  {player.pts}
+                </div>
+                <div className={rowStagger}>{player.reb}</div>
+                <div className={rowStagger}>{player.blk}</div>
+                <div className={rowStagger}>{player.stl}</div>
+                <div className={rowStagger}>{player.ast}</div>
+              </>
+            );
+          })}
+        </Grid>
+        <TeamName color={TEAM[gameInfo.homeTeam.abbr].color}>
+          {gameInfo.homeTeam.fullName}
+        </TeamName>
+        <Grid>
+          <div className="header">Name</div>
+          <div className="header">Min</div>
+          <div className="header">Pts</div>
+          <div className="header">Rbs</div>
+          <div className="header">Blks</div>
+          <div className="header">Stls</div>
+          <div className="header">Ast</div>
+          {playerStats.teamA.map((player, index) => {
+            let rowStagger = index % 2 === 0 ? "even" : "odd";
+            return (
+              <>
+                <div className={rowStagger}>
+                  {player.player.first_name} {player.player.last_name}
+                </div>
+                <div className={rowStagger}>{player.min}</div>
+                <div className={rowStagger} style={{ padding: "0 5px" }}>
+                  {player.pts}
+                </div>
+                <div className={rowStagger}>{player.reb}</div>
+                <div className={rowStagger}>{player.blk}</div>
+                <div className={rowStagger}>{player.stl}</div>
+                <div className={rowStagger}>{player.ast}</div>
+              </>
+            );
+          })}
+        </Grid>
       </Body>
     </Wrapper>
   );
@@ -94,12 +77,9 @@ const Wrapper = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
-  /* align-items: center; */
-  /* border: 1px solid red; */
 `;
 
-const Body = styled.div`
-`;
+const Body = styled.div``;
 
 const Grid = styled.div`
   display: grid;
@@ -117,7 +97,9 @@ const Grid = styled.div`
 
 const TeamName = styled.p`
   font-weight: 500;
-  background: ${({color}) => (color)};
+  color: #eee;
+  padding-left: 6px;
+  background: ${({ color }) => color};
 `;
 
 export default GameStats;
