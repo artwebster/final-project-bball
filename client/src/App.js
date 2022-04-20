@@ -11,8 +11,16 @@ import SignIn from "./SignIn/SignIn";
 import Account from "./Account/Account";
 import Fantasy from "./Fantasy/Fantasy";
 import Pickem from "./Fantasy/Pickem/Pickem";
+import { useContext } from "react";
+import { AccountContext } from "./Hooks/AccountContext";
+import BatchImp from "./batchImp";
 
 const App = () => {
+
+const { size } = useContext(AccountContext)
+console.log("mobile size???", size);
+
+
   return (
     <PageWrapper>
       <BrowserRouter>
@@ -41,6 +49,9 @@ const App = () => {
             <Route exact path="/account">
               <Account />
             </Route>
+            <Route exact path="/batchimp">
+              <BatchImp />
+            </Route>
             <Route path="/">
               <Games />
             </Route>
@@ -54,14 +65,15 @@ const App = () => {
 const PageWrapper = styled.div`
   width: 100vw;
   display: flex;
+  flex-direction: column;
   justify-content: center;
 `;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 35rem;
+  /* align-items: center; */
+  /* width: 35rem; */
   /* height: 50rem; */
   /* border: 1px solid red; */
 `;

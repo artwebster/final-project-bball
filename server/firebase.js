@@ -54,6 +54,6 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 const db = admin.firestore();
-// db.settings({ ignoreUndefinedProperties: true })
+db.settings({ ignoreUndefinedProperties: true })
 
 module.exports = { auth, createUserWithEmailAndPassword, db, signInWithEmailAndPassword };

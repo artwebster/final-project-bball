@@ -1,120 +1,47 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import Loading from "../Loading";
+import GameHighlights from "./GameHighlights";
+import GameStats from "./GameStats";
 
-const GameDetails = ({gameInfo}) => {
-  const [gameDetails, setGameDetails] = useState(null);
+const GameDetails = ({ gameInfo }) => {
+  const [gameDetails, setGameDetails] = useState("stats");
 
-  const getStats = () => {
-    console.log("fetching stats");
-    fetch(`https://www.balldontlie.io/api/v1/games?start_date=${gameInfo.date}&end_date=${gameInfo.date}`)
-    .then(res => res.json())
-    .then(data => {
-      let bdl_game = data.data.find((game) => game.home_team.abbreviation === gameInfo.homeTeam.abbr);
-      fetch(`https://www.balldontlie.io/api/v1/stats?game_ids[]=${bdl_game.id}`)
-      .then(res => res.json())
-      .then(data => {
-
-      let teamA = data.data.filter((player) => player.team.abbreviation === gameInfo.homeTeam.abbr)
-      let teamB = data.data.filter((player) => player.team.abbreviation === gameInfo.awayTeam.abbr)
-
-      setGameDetails({ teamA, teamB })
-      })
-    })
-  }
-
-  useEffect(() => {
-    getStats();
-  }, [gameInfo]);
-
-  if (!gameDetails) return <Loading />
+  const handleClick = (ev) => {
+    setGameDetails(ev.target.value);
+  };
 
   return (
     <Wrapper>
-      <Body>
-      <TeamName>{gameInfo.awayTeam.fullName}</TeamName>
-      <Grid>
-        <div className="header">Name</div>
-        <div className="header">Min</div>
-        <div className="header">Pts</div>
-        <div className="header">Rbs</div>
-        <div className="header">Blks</div>
-        <div className="header">Stls</div>
-        <div className="header">Asts</div>
-        {gameDetails.teamB.map((player, index) => {
-          let rowStagger = index % 2 === 0 ? "even" : "odd";
-          return (
-            <>
-              <div className={rowStagger}>
-                {player.player.first_name} {player.player.last_name}
-              </div>
-              <div className={rowStagger}>{player.min}</div>
-              <div className={rowStagger}>{player.pts}</div>
-              <div className={rowStagger}>{player.reb}</div>
-              <div className={rowStagger}>{player.blk}</div>
-              <div className={rowStagger}>{player.stl}</div>
-              <div className={rowStagger}>{player.ast}</div>
-            </>
-          );
-        })}
-        </Grid>
-        <TeamName>{gameInfo.homeTeam.fullName}</TeamName>
-        <Grid>
-        <div className="header">Name</div>
-        <div className="header">Min</div>
-        <div className="header">Pts</div>
-        <div className="header">Rbs</div>
-        <div className="header">Blks</div>
-        <div className="header">Stls</div>
-        <div className="header">Asts</div>
-        {gameDetails.teamA.map((player, index) => {
-          let rowStagger = index % 2 === 0 ? "even" : "odd";
-          return (
-            <>
-              <div className={rowStagger}>
-                {player.player.first_name} {player.player.last_name}
-              </div>
-              <div className={rowStagger}>{player.min}</div>
-              <div className={rowStagger}>{player.pts}</div>
-              <div className={rowStagger}>{player.reb}</div>
-              <div className={rowStagger}>{player.blk}</div>
-              <div className={rowStagger}>{player.stl}</div>
-              <div className={rowStagger}>{player.ast}</div>
-            </>
-          );
-        })}
-      </Grid>
-      </Body>
+      <TopBar on>
+        <Button value={"stats"} className={(gameDetails === "stats") && "active"} onClick={(ev) => handleClick(ev)}>GAME STATS</Button>
+        <Button value={"highlights"} className={(gameDetails === "highlights") && "active"} onClick={(ev) => handleClick(ev)}>HIGHLIGHTS</Button>
+      </TopBar>
+      <MainDiv>
+        {gameDetails === "stats" && <GameStats gameInfo={gameInfo} />}
+        {gameDetails === "highlights" && <GameHighlights gameInfo={gameInfo} />}
+      </MainDiv>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
+width: 100%;
   display: flex;
-  width: 100%;
   flex-direction: column;
-  align-items: center;
-  border: 1px solid red;
 `;
 
-const Body = styled.div`
+const Button = styled.button`
+  font-weight: 300;
+  width: 50%;
 `;
 
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 3fr 1fr 1fr 1fr 1fr 1fr 1fr;
+const TopBar = styled.div`
   width: 100%;
-  > .odd {
-    background-color: var(--secondary-color);
+  .active {
+    background-color: var(--orange);
   }
-  > .header {
-    font-weight: 700;
-  }
-  margin-bottom: 0.5rem;
 `;
 
-const TeamName = styled.p`
-  font-weight: 500;
-`;
+const MainDiv = styled.div``;
 
 export default GameDetails;

@@ -1,8 +1,10 @@
 {
   "name": "functions",
+  "type": "module",
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "lint": "eslint .",
+    "node-fetch": "^2.6.7",
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
@@ -15,7 +17,8 @@
   "main": "index.js",
   "dependencies": {
     "firebase-admin": "^10.0.2",
-    "firebase-functions": "^3.20.1"
+    "firebase-functions": "^3.20.1",
+    "node-fetch": "^3.2.3"
   },
   "devDependencies": {
     "eslint": "^8.9.0",

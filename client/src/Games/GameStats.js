@@ -1,23 +1,39 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import Loading from "../Loading";
+import * as TEAM from "../data/constants";
 
-const GameStats = ({ gameDetails, gamePreDetails }) => {
-  if (!gameDetails) return <div>No game stats yet, check back after tip off!</div>;
+const GameStats = ({gameInfo}) => {
+  const [gameDetails, setGameDetails] = useState(null);
 
-  // dividing the player stats into teams
-  let teamA = gameDetails.filter(
-    (player) => player.team.city === gamePreDetails.homeTeam.city
-  );
-  let teamB = gameDetails.filter(
-    (player) => player.team.city === gamePreDetails.awayTeam.city
-  );
+  const getStats = () => {
+    console.log("fetching stats");
+    fetch(`https://www.balldontlie.io/api/v1/games?start_date=${gameInfo.date}&end_date=${gameInfo.date}`)
+    .then(res => res.json())
+    .then(data => {
+      let bdl_game = data.data.find((game) => game.home_team.abbreviation === gameInfo.homeTeam.abbr);
+      fetch(`https://www.balldontlie.io/api/v1/stats?game_ids[]=${bdl_game.id}`)
+      .then(res => res.json())
+      .then(data => {
 
-  // sorting player stats based on points scored
-  teamA.sort((a, b) => (a.pts > b.pts) ? -1: 1);
-  teamB.sort((a, b) => (a.pts > b.pts) ? -1: 1);
-    
+      let teamA = data.data.filter((player) => player.team.abbreviation === gameInfo.homeTeam.abbr)
+      let teamB = data.data.filter((player) => player.team.abbreviation === gameInfo.awayTeam.abbr)
+
+      setGameDetails({ teamA, teamB })
+      })
+    })
+  }
+
+  useEffect(() => {
+    getStats();
+  }, [gameInfo]);
+
+  if (!gameDetails) return <Loading />
+
   return (
-    <>
-      <TeamName>{gamePreDetails.awayTeam.fullName}</TeamName>
+    <Wrapper>
+      <Body>
+      <TeamName color={TEAM[gameInfo.awayTeam.abbr].color}>{gameInfo.awayTeam.fullName}</TeamName>
       <Grid>
         <div className="header">Name</div>
         <div className="header">Min</div>
@@ -26,7 +42,7 @@ const GameStats = ({ gameDetails, gamePreDetails }) => {
         <div className="header">Blks</div>
         <div className="header">Stls</div>
         <div className="header">Asts</div>
-        {teamB.map((player, index) => {
+        {gameDetails.teamB.map((player, index) => {
           let rowStagger = index % 2 === 0 ? "even" : "odd";
           return (
             <>
@@ -34,7 +50,7 @@ const GameStats = ({ gameDetails, gamePreDetails }) => {
                 {player.player.first_name} {player.player.last_name}
               </div>
               <div className={rowStagger}>{player.min}</div>
-              <div className={rowStagger}>{player.pts}</div>
+              <div className={rowStagger} style={{padding: "0 5px"}}>{player.pts}</div>
               <div className={rowStagger}>{player.reb}</div>
               <div className={rowStagger}>{player.blk}</div>
               <div className={rowStagger}>{player.stl}</div>
@@ -43,7 +59,7 @@ const GameStats = ({ gameDetails, gamePreDetails }) => {
           );
         })}
         </Grid>
-        <TeamName>{gamePreDetails.homeTeam.fullName}</TeamName>
+        <TeamName color={TEAM[gameInfo.homeTeam.abbr].color}>{gameInfo.homeTeam.fullName}</TeamName>
         <Grid>
         <div className="header">Name</div>
         <div className="header">Min</div>
@@ -51,8 +67,8 @@ const GameStats = ({ gameDetails, gamePreDetails }) => {
         <div className="header">Rbs</div>
         <div className="header">Blks</div>
         <div className="header">Stls</div>
-        <div className="header">Asts</div>
-        {teamA.map((player, index) => {
+        <div className="header">Ast</div>
+        {gameDetails.teamA.map((player, index) => {
           let rowStagger = index % 2 === 0 ? "even" : "odd";
           return (
             <>
@@ -60,7 +76,7 @@ const GameStats = ({ gameDetails, gamePreDetails }) => {
                 {player.player.first_name} {player.player.last_name}
               </div>
               <div className={rowStagger}>{player.min}</div>
-              <div className={rowStagger}>{player.pts}</div>
+              <div className={rowStagger} style={{padding: "0 5px"}}>{player.pts}</div>
               <div className={rowStagger}>{player.reb}</div>
               <div className={rowStagger}>{player.blk}</div>
               <div className={rowStagger}>{player.stl}</div>
@@ -69,25 +85,39 @@ const GameStats = ({ gameDetails, gamePreDetails }) => {
           );
         })}
       </Grid>
-    </>
+      </Body>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  /* align-items: center; */
+  /* border: 1px solid red; */
+`;
+
+const Body = styled.div`
+`;
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 3fr 1fr 1fr 1fr 1fr 1fr 1fr;
   width: 100%;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
   > .odd {
     background-color: var(--secondary-color);
   }
   > .header {
     font-weight: 700;
   }
-  margin-bottom: 0.5rem;
 `;
 
 const TeamName = styled.p`
   font-weight: 500;
+  background: ${({color}) => (color)};
 `;
 
 export default GameStats;

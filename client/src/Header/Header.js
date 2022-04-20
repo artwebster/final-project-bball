@@ -13,32 +13,37 @@ const Header = () => {
   const { userInfo } = useContext(AccountContext);
   const [toggleMenu, setToggleMenu] = useState(false);
 
+  console.log("header render");
+
+
   return (
     <>
       <SpacerDiv />
       <Wrapper>
-        <TopBar>
-          <Title
-            to={{
-              pathname: "/",
-              state: { fromLogo: true },
-            }}
-            onClick={() => setDate(dayjs())}
-          >
-            <Logo src={tipoff} />
-          </Title>
-          <RightDiv>
-            {userInfo && (
-              <ProfileLink to={"/account"}>
-                Welcome, {userInfo.username}
-              </ProfileLink>
-            )}
-            <MenuButton onClick={() => setToggleMenu(!toggleMenu)}>
-              <FiMenu style={{ fontSize: 30, color: "var(--font-color)" }} />
-            </MenuButton>
-          </RightDiv>
-        </TopBar>
-        {toggleMenu && <Menu setToggleMenu={setToggleMenu} />}
+
+          <TopBar>
+            <Title
+              to={{
+                pathname: "/",
+                state: { fromLogo: true },
+              }}
+              onClick={() => setDate(dayjs())}
+            >
+              <Logo src={tipoff} />
+            </Title>
+            <RightDiv>
+              {userInfo && (
+                <ProfileLink to={"/account"}>
+                  Welcome, {userInfo.username}
+                </ProfileLink>
+              )}
+              <MenuButton onClick={() => setToggleMenu(!toggleMenu)}>
+                <FiMenu style={{ fontSize: 30, color: "var(--font-color)" }} />
+              </MenuButton>
+            </RightDiv>
+          {toggleMenu && <Menu setToggleMenu={setToggleMenu} />}
+          </TopBar>
+
       </Wrapper>
     </>
   );
@@ -49,17 +54,28 @@ const SpacerDiv = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: 35rem;
   position: fixed;
-  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3.5rem;
+  /* background-color: var(--background-color); */
+  background-color: black;
 `;
 
+
 const TopBar = styled.div`
+  width: 95%;
+  max-width: 1024px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
   height: 3.5rem;
+  padding: 0rem 0.6rem;
 `;
 
 const RightDiv = styled.div`
