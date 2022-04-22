@@ -71,12 +71,12 @@ const Modal = styled.div`
 const Wrapper = styled.div`
   position: absolute;
   top: 3.4rem;
-  right: 1rem;
+  right: 0.4rem;
   display: flex;
   flex-direction: column;
   text-align: right;
   z-index: 4;
-  width: 8rem;
+  width: 7.5rem;
   cursor: pointer;
 `;
 

@@ -191,12 +191,12 @@ const getOdds = async (req, res) => {
 
 const getNews = async (req, res) => {
   try {
-    // const response = await fetch(
-    //   `https://gnews.io/api/v4/top-headlines?topic=sports&q=nba&lang=en&token=${GNEWS}`
-    // );
-    // const data = await response.json();
+    const response = await fetch(
+      `https://gnews.io/api/v4/top-headlines?topic=sports&q=nba&lang=en&token=${GNEWS}`
+    );
+    const data = await response.json();
 
-    const data = newsItems;
+    // const data = newsItems;
 
     res.status(200).json({ status: 200, data, message: "Request successful" });
   } catch (err) {
