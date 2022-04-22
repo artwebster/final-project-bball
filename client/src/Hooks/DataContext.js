@@ -78,7 +78,8 @@ export const DataProvider = ({ children }) => {
     console.log("getGamesSched fired");
     const start = date.format("YYYY-MM-DD");
     const end = date.add(7, "day").format("YYYY-MM-DD");
-
+    console.log(start);
+    console.log(end);
     fetch(
       `https://www.balldontlie.io/api/v1/games?per_page=100&start_date=${start}&end_date=${end}`
     )

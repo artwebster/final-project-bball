@@ -149,7 +149,7 @@ const MiddleDate = styled(Date)`
   border: 1px solid var(--secondary-color);
   box-shadow: var(--box-shadow);
   width: 5rem;
-  z-index: 2;
+  z-index: 1;
 `;
 
 export default DateBar;
